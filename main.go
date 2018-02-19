@@ -1,34 +1,24 @@
 package main
 
 import (
+	"fmt"
 	"io"
+	"log"
 	"net/http"
+	"os"
 )
 
 func hello(w http.ResponseWriter, r *http.Request) {
-	io.WriteString(w, "Hello world!")
+	io.WriteString(w, "Welcome to our BattleSnake server for 2018!!")
 }
-
-var mux map[string]func(http.ResponseWriter, *http.Request)
 
 func main() {
-	server := http.Server{
-		Addr:    ":8000",
-		Handler: &myHandler{},
+	http.HandleFunc("/", hello)
+
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "9000"
 	}
-
-	mux = make(map[string]func(http.ResponseWriter, *http.Request))
-	mux["/"] = hello
-
-	server.ListenAndServe()
-}
-
-type myHandler struct{}
-
-func (*myHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	if h, ok := mux[r.URL.String()]; ok {
-		h(w, r)
-		return
-	}
-	io.WriteString(w, "My server: "+r.URL.String())
+	log.Println(fmt.Sprintf("Running server on port %s...", port))
+	http.ListenAndServe(":"+port, nil)
 }
