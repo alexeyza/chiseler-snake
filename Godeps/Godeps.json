@@ -1,0 +1,6 @@
+{
+	"ImportPath": "github.com/omazhary/battlesnake-2018",
+	"GoVersion": "go1.7",
+	"GodepVersion": "v80",
+	"Deps": []
+}
