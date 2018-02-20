@@ -14,6 +14,8 @@ func hello(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	http.HandleFunc("/", hello)
+	http.HandleFunc("/start", StartHandler)
+	http.HandleFunc("/move", MoveHandler)
 
 	port := os.Getenv("PORT")
 	if port == "" {
