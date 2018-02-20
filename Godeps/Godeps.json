@@ -1,5 +1,5 @@
 {
-	"ImportPath": "github.com/omazhary/battlesnake-2018",
+	"ImportPath": "github.com/omazhary/chiseler-snake",
 	"GoVersion": "go1.7",
 	"GodepVersion": "v80",
 	"Deps": []
