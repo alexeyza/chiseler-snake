@@ -1,0 +1,16 @@
+{
+    "name": "chiseler-snake",
+    "description": "The CHISEL team entry for BattleSnake 2018.",
+    "keywords": [
+        "battlesnake",
+        "artificial intelligence",
+        "alexeyza",
+        "mljensen",
+        "omazhary"
+    ],
+    "website": "",
+    "repository": "https://github.com/omazhary/battlesnake-2018",
+    "env": {
+        "BUILDPACK_URL": "https://github.com/heroku/heroku-buildpack-go"
+    }
+}
