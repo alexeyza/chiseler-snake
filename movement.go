@@ -9,6 +9,6 @@ var movement_map = map[int]string{
 	4: "left",
 }
 
-func strategize() string {
+func Strategize() string {
 	return movement_map[rand.Intn(4)+1]
 }
