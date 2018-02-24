@@ -158,18 +158,18 @@ heroku logs --tail
 
 2) Install the game server (this should also run the game server for you).
 ``` bash
-docker run -it -p 4000:4000 stembolt/battle_snake
+docker run -it --rm -p 3000:3000 sendwithus/battlesnake-server
 ```
 
-To stop/start the game server use:
+To stop/start the game server container use:
 ``` bash
 docker start vibrant_kowalevski
 
 docker stop vibrant_kowalevski
 ```
-Where `vibrant_kowalevski` is the name of my local game server.
+Where `vibrant_kowalevski` is the name of my local game server container.
 
-3) Visit http://localhost:4000
+3) Visit http://localhost:3000
 NOTE: Docker runs on a virtual LAN so when you add a snake to the game you cannot use `http://localhost:9000`, use your internal IP instead (also remove trailing `/`).
 
 
