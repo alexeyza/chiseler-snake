@@ -21,5 +21,5 @@ func StartHandler(response http.ResponseWriter, request *http.Request) {
 }
 
 func MoveHandler(response http.ResponseWriter, request *http.Request) {
-	Strategize(response, request)
+	Strategize()
 }
