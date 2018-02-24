@@ -23,7 +23,3 @@ func StartHandler(response http.ResponseWriter, request *http.Request) {
 func MoveHandler(response http.ResponseWriter, request *http.Request) {
 	Strategize(response, request)
 }
-
-func Strategize(response http.ResponseWriter, request *http.Request) {
-	// move code goes here
-}
