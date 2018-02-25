@@ -21,8 +21,9 @@ func StartHandler(response http.ResponseWriter, request *http.Request) {
 }
 
 func MoveHandler(response http.ResponseWriter, request *http.Request) {
+	world, _ := NewMoveRequest(request)
 	responseData := BSResponse{
-		"move": Strategize(),
+		"move": Strategize(world),
 	}
 	json.NewEncoder(response).Encode(responseData)
 }

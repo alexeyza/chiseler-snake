@@ -1,6 +1,8 @@
 package main
 
-import "math/rand"
+import (
+	"math/rand"
+)
 
 var movement_map = map[int]string{
 	1: "up",
@@ -9,6 +11,11 @@ var movement_map = map[int]string{
 	4: "left",
 }
 
-func Strategize() string {
+func Strategize(world *MoveRequest) string {
+
+	// for _, snake := range world.Snakes {
+	//
+	// }
+
 	return movement_map[rand.Intn(4)+1]
 }
