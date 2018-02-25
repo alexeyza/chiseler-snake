@@ -24,13 +24,17 @@ import (
 // }
 
 type MoveRequest struct {
-	Food   []Point `json:"food"`
-	Id     int     `json:"id"`
-	Height int     `json:"height"`
-	Width  int     `json:"width"`
-	Turn   int     `json:"turn"`
-	Snakes []Snake `json:"snakes"`
-	You    Snake   `json:"you"`
+	Food struct {
+		Data []Point `json:"data"`
+	} `json:"food"`
+	Id     int `json:"id"`
+	Height int `json:"height"`
+	Width  int `json:"width"`
+	Turn   int `json:"turn"`
+	Snakes struct {
+		Data []Snake `json:"data"`
+	} `json:"snakes"`
+	You Snake `json:"you"`
 }
 
 // type MoveResponse struct {
@@ -44,12 +48,14 @@ type Point struct {
 }
 
 type Snake struct {
-	Body   []Point `json:"body"`
-	Health int     `json:"health"`
-	Id     string  `json:"id"`
-	Name   string  `json:"name"`
-	Taunt  string  `json:"taunt"`
-	Length int     `json:"length"`
+	Body struct {
+		Data []Point `json:"data"`
+	} `json:"body"`
+	Health int    `json:"health"`
+	Id     string `json:"id"`
+	Name   string `json:"name"`
+	Taunt  string `json:"taunt"`
+	Length int    `json:"length"`
 }
 
 func NewMoveRequest(req *http.Request) (*MoveRequest, error) {
