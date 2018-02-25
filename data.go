@@ -70,7 +70,7 @@ func NewMoveRequest(req *http.Request) (*MoveRequest, error) {
 // 	return &decoded, err
 // }
 
-// func (snake Snake) Head() Point { return snake.Coords[0] }
+func (snake Snake) Head() Point { return snake.Body.Data[0] }
 
 // Decode [number, number] JSON array into a Point
 // func (point *Point) UnmarshalJSON(data []byte) error {
@@ -82,3 +82,20 @@ func NewMoveRequest(req *http.Request) (*MoveRequest, error) {
 // 	*point = Point{X: coords[0], Y: coords[1]}
 // 	return nil
 // }
+
+func (p *Point) IsOutOfMapBounds(world *MoveRequest) bool {
+	if p.X < 0 || p.Y < 0 {
+		return true
+	}
+	if p.Y >= world.Height || p.X >= world.Width {
+		return true
+	}
+	return false
+}
+
+func (p *Point) Equals(q Point) bool {
+	if p.X == q.X && p.Y == q.Y {
+		return true
+	}
+	return false
+}
