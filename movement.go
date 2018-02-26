@@ -50,6 +50,9 @@ func IsValidPointToMoveTo(p Point, world *MoveRequest) bool {
 	if IsGoingToHitHimselfAtPoint(p, world) {
 		return false
 	}
+	if IsGoingToHitOthersAtPoint(p, world) {
+		return false
+	}
 	return true
 }
 
