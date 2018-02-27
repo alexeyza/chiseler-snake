@@ -11,16 +11,25 @@ var movement_map = map[int]string{
 	4: "left",
 }
 
+var move_queue = NewDeque()
+
 func Strategize(world *MoveRequest) string {
 
 	myHeadLocation := world.You.Head()
-	direction := FindDirection(world)
-	nextPosition := GetNextPointBasedOnDirection(direction, myHeadLocation)
-	for flag := false; flag == false; flag = IsValidPointToMoveTo(nextPosition, world) {
-		direction = FindDirection(world)
-		nextPosition = GetNextPointBasedOnDirection(direction, myHeadLocation)
+	foodLocation := world.Food.Data[0]
+
+	if move_queue.Empty() {
+		SimplePath(myHeadLocation, foodLocation)
 	}
-	return movement_map[direction]
+	next_move, _ := move_queue.Pop().(int)
+	next_position := GetNextPointBasedOnDirection(next_move, myHeadLocation)
+
+	for flag := IsValidPointToMoveTo(next_position, world); flag == false; flag = IsValidPointToMoveTo(next_position, world) {
+		next_move = rand.Intn(4) + 1
+		next_position = GetNextPointBasedOnDirection(next_move, myHeadLocation)
+	}
+
+	return movement_map[next_move]
 }
 
 func IsGoingToHitHimselfAtPoint(p Point, world *MoveRequest) bool {
@@ -73,6 +82,30 @@ func GetNextPointBasedOnDirection(direction int, currentPoint Point) Point {
 	return nextPoint
 }
 
-func FindDirection(world *MoveRequest) int {
-	return rand.Intn(4) + 1
+func SimplePath(source Point, destination Point) {
+	xdimension := source.X - destination.X
+	ydimension := source.Y - destination.Y
+
+	if xdimension < 0 {
+		for i := xdimension; i < 0; i++ {
+			//fmt.Println("right")
+			move_queue.Prepend(2)
+		}
+	} else {
+		for i := 0; i < xdimension; i++ {
+			//fmt.Println("left")
+			move_queue.Prepend(4)
+		}
+	}
+	if ydimension < 0 {
+		for i := ydimension; i < 0; i++ {
+			//fmt.Println("down")
+			move_queue.Prepend(3)
+		}
+	} else {
+		for i := 0; i < ydimension; i++ {
+			//fmt.Println("up")
+			move_queue.Prepend(1)
+		}
+	}
 }
