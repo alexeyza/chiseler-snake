@@ -2,5 +2,11 @@
 	"ImportPath": "github.com/omazhary/chiseler-snake",
 	"GoVersion": "go1.7",
 	"GodepVersion": "v80",
-	"Deps": []
+	"Deps": [
+		{
+			"ImportPath": "gopkg.in/oleiade/lane.v1",
+			"Comment": "v1.0.0",
+			"Rev": "28f7c3f09254f12b51e620fa4db136ba58804762"
+		}
+	]
 }

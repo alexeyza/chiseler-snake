@@ -2,6 +2,8 @@ package main
 
 import (
 	"math/rand"
+
+	"gopkg.in/oleiade/lane.v1"
 )
 
 var movement_map = map[int]string{
@@ -11,7 +13,7 @@ var movement_map = map[int]string{
 	4: "left",
 }
 
-var move_queue = NewDeque()
+var move_queue = lane.NewDeque()
 
 func Strategize(world *MoveRequest) string {
 
