@@ -14,15 +14,16 @@ func StartHandler(response http.ResponseWriter, request *http.Request) {
 		"taunt":           "You've just been ERASED!!",
 		"head_type":       "tongue",
 		"tail_type":       "small-rattle",
-		"head_url":        "",
+		"head_url":        "https://chiseler-snake.herokuapp.com/head.png",
 		"secondary_color": "#FEB23B",
 	}
 	json.NewEncoder(response).Encode(responseData)
 }
 
 func MoveHandler(response http.ResponseWriter, request *http.Request) {
+	world, _ := NewMoveRequest(request)
 	responseData := BSResponse{
-		"move": Strategize(),
+		"move": Strategize(world),
 	}
 	json.NewEncoder(response).Encode(responseData)
 }
