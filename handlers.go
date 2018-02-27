@@ -14,7 +14,7 @@ func StartHandler(response http.ResponseWriter, request *http.Request) {
 		"taunt":           "You've just been ERASED!!",
 		"head_type":       "tongue",
 		"tail_type":       "small-rattle",
-		"head_url":        "",
+		"head_url":        "https://chiseler-snake.herokuapp.com/head.jpg",
 		"secondary_color": "#FEB23B",
 	}
 	json.NewEncoder(response).Encode(responseData)
