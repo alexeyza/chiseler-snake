@@ -37,6 +37,11 @@ type Snake struct {
 	Length int    `json:"length"`
 }
 
+func NewStartRequest(req *http.Request) (*StartRequest, error) {
+	decoded := StartRequest{}
+	err := json.NewDecoder(req.Body).Decode(&decoded)
+	return &decoded, err
+}
 func NewMoveRequest(req *http.Request) (*MoveRequest, error) {
 	decoded := MoveRequest{}
 	err := json.NewDecoder(req.Body).Decode(&decoded)
