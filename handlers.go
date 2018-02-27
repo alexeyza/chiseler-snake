@@ -2,10 +2,9 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 )
-
-type BSResponse map[string]interface{}
 
 func StartHandler(response http.ResponseWriter, request *http.Request) {
 	responseData := BSResponse{
