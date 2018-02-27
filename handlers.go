@@ -10,12 +10,12 @@ type BSResponse map[string]interface{}
 func StartHandler(response http.ResponseWriter, request *http.Request) {
 	responseData := BSResponse{
 		"name":            "Chiseler",
-		"color":           "#6495ED",
+		"color":           "#0A3F71",
 		"taunt":           "You've just been ERASED!!",
-		"head_type":       "sand-worm",
-		"tail_type":       "fat-rattle",
+		"head_type":       "tongue",
+		"tail_type":       "small-rattle",
 		"head_url":        "",
-		"secondary_color": "",
+		"secondary_color": "#FEB23B",
 	}
 	json.NewEncoder(response).Encode(responseData)
 }
