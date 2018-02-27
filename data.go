@@ -2,27 +2,13 @@ package main
 
 import (
 	"encoding/json"
-	//"errors"
 	"net/http"
-	//	"strings"
 )
 
-// type GameStartRequest struct {
-// 	GameId string `json:"game_id"`
-// 	Height int    `json:"height"`
-// 	Width  int    `json:"width"`
-// }
-
-// type GameStartResponse struct {
-// 	Color          string  `json:"color"`
-// 	HeadUrl        *string `json:"head_url,omitempty"`
-// 	Name           string  `json:"name"`
-// 	Taunt          *string `json:"taunt,omitempty"`
-// 	HeadType       string  `json:"head_type"`
-// 	TailType       string  `json:"tail_type"`
-// 	SecondaryColor string  `json:"secondary_color"`
-// }
-
+type BSResponse map[string]interface{}
+type StartRequest struct {
+	Game_id int `json: "id"`
+}
 type MoveRequest struct {
 	Food struct {
 		Data []Point `json:"data"`
@@ -36,17 +22,10 @@ type MoveRequest struct {
 	} `json:"snakes"`
 	You Snake `json:"you"`
 }
-
-// type MoveResponse struct {
-// 	Move  string  `json:"move"`
-// 	Taunt *string `json:"taunt,omitempty"`
-// }
-
 type Point struct {
 	X int `json:"x"`
 	Y int `json:"y"`
 }
-
 type Snake struct {
 	Body struct {
 		Data []Point `json:"data"`
@@ -63,26 +42,7 @@ func NewMoveRequest(req *http.Request) (*MoveRequest, error) {
 	err := json.NewDecoder(req.Body).Decode(&decoded)
 	return &decoded, err
 }
-
-// func NewGameStartRequest(req *http.Request) (*GameStartRequest, error) {
-// 	decoded := GameStartRequest{}
-// 	err := json.NewDecoder(req.Body).Decode(&decoded)
-// 	return &decoded, err
-// }
-
 func (snake Snake) Head() Point { return snake.Body.Data[0] }
-
-// Decode [number, number] JSON array into a Point
-// func (point *Point) UnmarshalJSON(data []byte) error {
-// 	var coords []int
-// 	json.Unmarshal(data, &coords)
-// 	if len(coords) != 2 {
-// 		return errors.New("Bad set of coordinates: " + string(data))
-// 	}
-// 	*point = Point{X: coords[0], Y: coords[1]}
-// 	return nil
-// }
-
 func (p *Point) IsOutOfMapBounds(world *MoveRequest) bool {
 	if p.X < 0 || p.Y < 0 {
 		return true
@@ -92,7 +52,6 @@ func (p *Point) IsOutOfMapBounds(world *MoveRequest) bool {
 	}
 	return false
 }
-
 func (p *Point) Equals(q Point) bool {
 	if p.X == q.X && p.Y == q.Y {
 		return true
