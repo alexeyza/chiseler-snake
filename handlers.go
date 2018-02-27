@@ -13,12 +13,12 @@ func StartHandler(response http.ResponseWriter, request *http.Request) {
 	active_games[start_request.Game_id] = lane.NewDeque()
 	response_data := BSResponse{
 		"name":            "Chiseler",
-		"color":           "#0A3F71",
+		"color":           "#0091BA",
 		"taunt":           "You've just been ERASED!!",
 		"head_type":       "tongue",
 		"tail_type":       "small-rattle",
 		"head_url":        "https://raw.githubusercontent.com/omazhary/chiseler-snake/master/static/head.png",
-		"secondary_color": "#FEB23B",
+		"secondary_color": "#DD002F",
 	}
 	json.NewEncoder(response).Encode(response_data)
 	log.Println(fmt.Sprintf("Started game %d.", start_request.Game_id))
