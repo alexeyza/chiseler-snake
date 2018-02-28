@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"gopkg.in/oleiade/lane.v1"
 	"math"
 )
@@ -18,8 +17,21 @@ var move_queue = lane.NewDeque()
 func Strategize(world *MoveRequest) string {
 
 	myHeadLocation := world.You.Head()
+	nearTailLocations := GetNearTailPositions(world.You, world)
 	foodLocation := FindFood(myHeadLocation, world)
-	path_map := ShortestPath(myHeadLocation, foodLocation, world)
+	var path_map []int
+	if world.You.Health < 50 || world.You.Length < 10 {
+		path_map = ShortestPath(myHeadLocation, foodLocation, world)
+		//if path_map == nil {
+		//}
+	} else {
+		for _, possible_target_destination := range nearTailLocations {
+			path_map = ShortestPath(myHeadLocation, possible_target_destination, world)
+			if path_map != nil {
+				break
+			}
+		}
+	}
 	return movement_map[path_map[0]]
 }
 
@@ -114,6 +126,7 @@ func FindFood(location Point, world *MoveRequest) Point {
 	return closest_food
 }
 
+// returns a slice with the directions towards the destination. If no path to destination, returns nil
 func ShortestPath(source Point, destination Point, world *MoveRequest) []int {
 	queue := lane.NewDeque()
 	var parent Point
@@ -148,4 +161,31 @@ func ShortestPath(source Point, destination Point, world *MoveRequest) []int {
 		visited[parent] = true
 	}
 	return o_path[destination]
+}
+
+func GetTailPosition(snake Snake) Point {
+	return snake.Body.Data[snake.Length-1]
+}
+
+func GetNearTailPositions(snake Snake, world *MoveRequest) []Point {
+	tail := snake.Body.Data[snake.Length-1]
+	var output []Point
+	var p1, p2, p3, p4 Point
+	p1 = Point{X: tail.X + 1, Y: tail.Y}
+	p2 = Point{X: tail.X, Y: tail.Y + 1}
+	p3 = Point{X: tail.X - 1, Y: tail.Y}
+	p4 = Point{X: tail.X, Y: tail.Y - 1}
+	if IsValidPointToMoveTo(p1, world) {
+		output = append(output, p1)
+	}
+	if IsValidPointToMoveTo(p2, world) {
+		output = append(output, p2)
+	}
+	if IsValidPointToMoveTo(p3, world) {
+		output = append(output, p3)
+	}
+	if IsValidPointToMoveTo(p4, world) {
+		output = append(output, p4)
+	}
+	return output
 }
