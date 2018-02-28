@@ -17,7 +17,8 @@ var move_queue = lane.NewDeque()
 func Strategize(world *MoveRequest) string {
 
 	myHeadLocation := world.You.Head()
-	nearTailLocations := GetNearTailPositions(world.You, world)
+	myTailLocation := world.You.Body.Data[world.You.Length-1]
+	nearTailLocations := GetValidAdjacentPoints(myTailLocation, world)
 	foodLocation := FindFood(myHeadLocation, world)
 	var path_map []int
 	if world.You.Health < 50 || world.You.Length < 10 {
@@ -54,6 +55,12 @@ func IsGoingToHitOthersAtPoint(p Point, world *MoveRequest) bool {
 	for _, snake := range world.Snakes.Data {
 		for _, bodyPoints := range snake.Body.Data {
 			if p.Equals(bodyPoints) {
+				return true
+			}
+		}
+
+		for _, position_next_to_enemys_head := range GetAdjacentPoints(snake.Head(), world) {
+			if position_next_to_enemys_head.Equals(p) && snake.Health > world.You.Health {
 				return true
 			}
 		}
@@ -173,25 +180,24 @@ func GetTailPosition(snake Snake) Point {
 	return snake.Body.Data[snake.Length-1]
 }
 
-func GetNearTailPositions(snake Snake, world *MoveRequest) []Point {
-	tail := snake.Body.Data[snake.Length-1]
+// give this function a point on the map, and it will return the adjacent valid positions
+func GetAdjacentPoints(point Point, world *MoveRequest) []Point {
+	output := []Point{
+		Point{X: point.X + 1, Y: point.Y},
+		Point{X: point.X, Y: point.Y + 1},
+		Point{X: point.X - 1, Y: point.Y},
+		Point{X: point.X, Y: point.Y - 1},
+	}
+	return output
+}
+
+// this one only returns valid points
+func GetValidAdjacentPoints(point Point, world *MoveRequest) []Point {
 	var output []Point
-	var p1, p2, p3, p4 Point
-	p1 = Point{X: tail.X + 1, Y: tail.Y}
-	p2 = Point{X: tail.X, Y: tail.Y + 1}
-	p3 = Point{X: tail.X - 1, Y: tail.Y}
-	p4 = Point{X: tail.X, Y: tail.Y - 1}
-	if IsValidPointToMoveTo(p1, world) {
-		output = append(output, p1)
-	}
-	if IsValidPointToMoveTo(p2, world) {
-		output = append(output, p2)
-	}
-	if IsValidPointToMoveTo(p3, world) {
-		output = append(output, p3)
-	}
-	if IsValidPointToMoveTo(p4, world) {
-		output = append(output, p4)
+	for _, adj_point := range GetAdjacentPoints(point, world) {
+		if IsValidPointToMoveTo(adj_point, world) {
+			output = append(output, adj_point)
+		}
 	}
 	return output
 }
