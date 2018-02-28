@@ -22,8 +22,14 @@ func Strategize(world *MoveRequest) string {
 	var path_map []int
 	if world.You.Health < 50 || world.You.Length < 10 {
 		path_map = ShortestPath(myHeadLocation, foodLocation, world)
-		//if path_map == nil {
-		//}
+		if path_map == nil {
+			for _, possible_target_destination := range nearTailLocations {
+				path_map = ShortestPath(myHeadLocation, possible_target_destination, world)
+				if path_map != nil {
+					break
+				}
+			}
+		}
 	} else {
 		for _, possible_target_destination := range nearTailLocations {
 			path_map = ShortestPath(myHeadLocation, possible_target_destination, world)
