@@ -26,9 +26,18 @@ func StartHandler(response http.ResponseWriter, request *http.Request) {
 }
 
 func MoveHandler(response http.ResponseWriter, request *http.Request) {
+	log.Println("Received move request.")
 	world, _ := NewMoveRequest(request)
 	response_data := BSResponse{
 		"move": Strategize(world),
 	}
 	json.NewEncoder(response).Encode(response_data)
+	log.Println("Responded to move request.")
+}
+
+func EndHandler(response http.ResponseWriter, request *http.Request) {
+	log.Println("Received end request.")
+	response.WriteHeader(http.StatusOK)
+	response.Write([]byte("200 - Game Over!"))
+	log.Println("Responded to end request.")
 }
