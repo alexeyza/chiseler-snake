@@ -1,9 +1,8 @@
 package main
 
 import (
-	"math/rand"
-
 	"gopkg.in/oleiade/lane.v1"
+	"math/rand"
 )
 
 var movement_map = map[int]string{
