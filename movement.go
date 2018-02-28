@@ -1,10 +1,9 @@
 package main
 
 import (
-	"math"
-	"math/rand"
-
+	"fmt"
 	"gopkg.in/oleiade/lane.v1"
+	"math"
 )
 
 var movement_map = map[int]string{
@@ -20,19 +19,8 @@ func Strategize(world *MoveRequest) string {
 
 	myHeadLocation := world.You.Head()
 	foodLocation := FindFood(myHeadLocation, world)
-
-	if move_queue.Empty() {
-		SimplePath(myHeadLocation, foodLocation)
-	}
-	next_move, _ := move_queue.Pop().(int)
-	next_position := GetNextPointBasedOnDirection(next_move, myHeadLocation)
-
-	for flag := IsValidPointToMoveTo(next_position, world); flag == false; flag = IsValidPointToMoveTo(next_position, world) {
-		next_move = rand.Intn(4) + 1
-		next_position = GetNextPointBasedOnDirection(next_move, myHeadLocation)
-	}
-
-	return movement_map[next_move]
+	path_map := ShortestPath(myHeadLocation, foodLocation, world)
+	return movement_map[path_map[0]]
 }
 
 func IsGoingToHitHimselfAtPoint(p Point, world *MoveRequest) bool {
@@ -124,4 +112,40 @@ func FindFood(location Point, world *MoveRequest) Point {
 		}
 	}
 	return closest_food
+}
+
+func ShortestPath(source Point, destination Point, world *MoveRequest) []int {
+	queue := lane.NewDeque()
+	var parent Point
+	visited := map[Point]bool{}
+	plan_to_visit := map[Point]bool{}
+	possible_directions := []int{1, 2, 3, 4}
+	o_path := map[Point][]int{}
+
+	queue.Prepend(source)
+
+	for !queue.Empty() {
+		parent, _ = queue.Pop().(Point)
+		plan_to_visit[parent] = false
+		if parent.Equals(destination) {
+			break
+		}
+
+		for _, next_move := range possible_directions {
+			next_position := GetNextPointBasedOnDirection(next_move, parent)
+			if !IsValidPointToMoveTo(next_position, world) {
+				continue
+			}
+			if visited[next_position] {
+				continue
+			}
+			if !plan_to_visit[next_position] {
+				queue.Prepend(next_position)
+				plan_to_visit[next_position] = true
+				o_path[next_position] = append(o_path[parent], next_move)
+			}
+		}
+		visited[parent] = true
+	}
+	return o_path[destination]
 }
