@@ -1,6 +1,7 @@
 package main
 
 import (
+	"math"
 	"math/rand"
 
 	"gopkg.in/oleiade/lane.v1"
@@ -18,7 +19,7 @@ var move_queue = lane.NewDeque()
 func Strategize(world *MoveRequest) string {
 
 	myHeadLocation := world.You.Head()
-	foodLocation := world.Food.Data[0]
+	foodLocation := FindFood(myHeadLocation, world)
 
 	if move_queue.Empty() {
 		SimplePath(myHeadLocation, foodLocation)
@@ -110,4 +111,17 @@ func SimplePath(source Point, destination Point) {
 			move_queue.Prepend(1)
 		}
 	}
+}
+
+func FindFood(location Point, world *MoveRequest) Point {
+	closest_distance := math.MaxFloat64
+	closest_food := world.Food.Data[0]
+	for _, food_source := range world.Food.Data {
+		dist := location.distance(food_source)
+		if dist < closest_distance {
+			closest_distance = dist
+			closest_food = food_source
+		}
+	}
+	return closest_food
 }

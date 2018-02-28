@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"math"
 	"net/http"
 )
 
@@ -62,4 +63,8 @@ func (p *Point) Equals(q Point) bool {
 		return true
 	}
 	return false
+}
+
+func (p1 *Point) distance(p2 Point) float64 {
+	return math.Sqrt(math.Pow(float64(p2.X-p1.X), 2) + math.Pow(float64(p2.Y-p1.Y), 2))
 }
