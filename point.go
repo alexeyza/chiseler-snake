@@ -20,9 +20,9 @@ func (p *Point) Equals(q Point) bool {
 	}
 	return false
 }
-func (point Point) InObstructions(obstructions []Point) bool {
-	for _, obstruction := range obstructions {
-		if point.Equals(obstruction) {
+func (point Point) InArray(array []Point) bool {
+	for _, element := range array {
+		if point.Equals(element) {
 			return true
 		}
 	}
