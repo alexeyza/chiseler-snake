@@ -88,7 +88,7 @@ func IsRiskyPoint(p Point, world *MoveRequest) bool {
 		}
 		// next, check if we may hit an enemy snake's head,
 		// and if that snake's health is higher than ours, mark this as invalid move
-		for _, position_next_to_enemys_head := range GetAdjacentPoints(enemy_snake.Head(), world) {
+		for _, position_next_to_enemys_head := range GetAdjacentPoints(enemy_snake.Head()) {
 			if position_next_to_enemys_head.Equals(p) && enemy_snake.Health > world.You.Health {
 				return true
 			}
@@ -211,7 +211,7 @@ func GetTail(snake Snake) Point {
 
 // This method returns the adjacent points, based on the given point
 // Does NOT check if they are valid points to move to.
-func GetAdjacentPoints(point Point, world *MoveRequest) []Point {
+func GetAdjacentPoints(point Point) []Point {
 	output := []Point{
 		Point{X: point.X + 1, Y: point.Y},
 		Point{X: point.X, Y: point.Y + 1},
@@ -224,7 +224,7 @@ func GetAdjacentPoints(point Point, world *MoveRequest) []Point {
 // This method returns the adjacent points. Only returns valid points.
 func GetValidAdjacentPoints(point Point, world *MoveRequest) []Point {
 	var output []Point
-	for _, adj_point := range GetAdjacentPoints(point, world) {
+	for _, adj_point := range GetAdjacentPoints(point) {
 		if IsValidPointToMoveTo(adj_point, world) {
 			output = append(output, adj_point)
 		}
