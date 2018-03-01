@@ -7,9 +7,10 @@ The game server API documentation can be found at [https://stembolthq.github.io/
 ![Battlesnake game example](static/snakes.gif "BattleSnake game")
 
 ## Our Team
-[Omar Elazhary](https://github.com/omazhary)
-Meagan Russell
-[Alexey Zagalsky](http://alexeyza.com/)
+
+[Omar Elazhary](https://github.com/omazhary)  
+Meagan Russell  
+[Alexey Zagalsky](http://alexeyza.com/)  
 
 ### Running the BattleSnake locally
 
