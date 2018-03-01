@@ -18,12 +18,3 @@ func NewBoardStateFromMoveRequest(move_req *MoveRequest) *BoardState {
 	}
 	return &state
 }
-
-func InObstructions(point Point, obstructions []Point) bool {
-	for _, obstruction := range obstructions {
-		if point.Equals(obstruction) {
-			return true
-		}
-	}
-	return false
-}

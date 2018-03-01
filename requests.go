@@ -22,20 +22,6 @@ type MoveRequest struct {
 	} `json:"snakes"`
 	You Snake `json:"you"`
 }
-type Point struct {
-	X int `json:"x"`
-	Y int `json:"y"`
-}
-type Snake struct {
-	Body struct {
-		Data []Point `json:"data"`
-	} `json:"body"`
-	Health int    `json:"health"`
-	Id     string `json:"id"`
-	Name   string `json:"name"`
-	Taunt  string `json:"taunt"`
-	Length int    `json:"length"`
-}
 
 func NewStartRequest(req *http.Request) (*StartRequest, error) {
 	decoded := StartRequest{}
@@ -46,20 +32,4 @@ func NewMoveRequest(req *http.Request) (*MoveRequest, error) {
 	decoded := MoveRequest{}
 	err := json.NewDecoder(req.Body).Decode(&decoded)
 	return &decoded, err
-}
-func (snake Snake) Head() Point { return snake.Body.Data[0] }
-func (p *Point) IsOutOfMapBounds(world *MoveRequest) bool {
-	if p.X < 0 || p.Y < 0 {
-		return true
-	}
-	if p.Y >= world.Height || p.X >= world.Width {
-		return true
-	}
-	return false
-}
-func (p *Point) Equals(q Point) bool {
-	if p.X == q.X && p.Y == q.Y {
-		return true
-	}
-	return false
 }
