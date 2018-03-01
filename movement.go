@@ -71,7 +71,21 @@ func IsGoingToHitOthersAtPoint(p Point, world *MoveRequest) bool {
 		if IsGoingToHitHimselfAtPoint(p, enemy_snake) {
 			return true
 		}
+		if IsRiskyPoint(p, world) {
+			return true
+		}
+	}
+	return false
+}
 
+// This method checks if the given point 'p' might be risky (e.g., close to other snakes.
+// Note this doesn't check for collision, for that use the other method.
+func IsRiskyPoint(p Point, world *MoveRequest) bool {
+	for _, enemy_snake := range world.Snakes.Data {
+		// Skip our snake in the list of all snakes
+		if enemy_snake.Id == world.You.Id {
+			continue
+		}
 		// next, check if we may hit an enemy snake's head,
 		// and if that snake's health is higher than ours, mark this as invalid move
 		for _, position_next_to_enemys_head := range GetAdjacentPoints(enemy_snake.Head(), world) {
