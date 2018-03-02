@@ -51,6 +51,14 @@ func Strategize(world *MoveRequest) string {
 			}
 		}
 	}
+	// if haven't found to either food or tail
+	if path_map == nil {
+		for i := 1; i < 5; i++ {
+			if IsValidPointToMoveTo(GetNextPointBasedOnDirection(i, my_head_location), world) {
+				path_map = []int{i}
+			}
+		}
+	}
 	return movement_map[path_map[0]]
 }
 
@@ -171,7 +179,9 @@ func ShortestPath(source Point, destination Point, world *MoveRequest) []int {
 
 		// if we reached destination, stop
 		if parent.Equals(destination) {
-			break
+			// return the list of directions from source to destination
+			// note: we actually have a list of directions from the source to any other point on the board
+			return map_of_paths_to_any_point[destination]
 		}
 
 		// for every neighboring/adjacent point to the current point
@@ -199,9 +209,8 @@ func ShortestPath(source Point, destination Point, world *MoveRequest) []int {
 		// mark the current point as visited
 		visited[parent] = true
 	}
-	// return the list of directions from source to destination
-	// note: we actually have a list of directions from the source to any other point on the board
-	return map_of_paths_to_any_point[destination]
+
+	return nil
 }
 
 // This method returns the tail point of a given snake.
