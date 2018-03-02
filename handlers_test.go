@@ -24,6 +24,8 @@ func TestMoveHandler(t *testing.T) {
 		{name: "(6) killed himself even though near food and smaller snake", request_msg: game_killed_himself_though_food_nearby_and_smaller_enemy_snake, fail_returned_msg: "{\"move\":\"up\"}\n"},
 		{name: "(7) kill himself when smaller snake blocked the way, even though could eat it", request_msg: game_smaller_snake_blocking_way, success_returned_msg: "{\"move\":\"down\"}\n"},
 		{name: "(8) didn't take possible risky but good move because near enemy snake head", request_msg: game_didnt_take_possible_risky_but_good_move, success_returned_msg: "{\"move\":\"left\"}\n"},
+		{name: "(9) closest food is blocked by body of our snake", request_msg: game_closest_food_is_blocked_by_our_snake, success_returned_msg: "{\"move\":\"right\"}\n"},
+		{name: "(10) 2 food places nearby, it choses the closer one but a deadend", request_msg: game_2_foods_nearby_it_choses_to_go_for_closer_one_but_deadend, success_returned_msg: "{\"move\":\"down\"}\n"},
 	}
 
 	for _, test_case := range test_cases {
@@ -3623,6 +3625,1273 @@ var game_didnt_take_possible_risky_but_good_move string = `{
           "object": "point",
           "x": 8,
           "y": 10
+        }
+      ],
+      "object": "list"
+    }
+  }
+}`
+
+//https://play.snakedown.com/app/replay/3f478de6-8630-4d51-bc9f-9c4a483ccbef
+var game_closest_food_is_blocked_by_our_snake string = `{
+  "width": 10,
+  "height": 18,
+  "id": 7018,
+  "turn": 421,
+  "snakes": {
+    "data": [
+      {
+        "id": "0c75298e-0045-4f8b-9524-a552f881f08b",
+        "health": 85,
+        "length": 30,
+        "taunt": "TIMED OUT",
+        "name": "chiseler",
+        "object": "snake",
+        "body": {
+          "data": [
+            {
+              "object": "point",
+              "x": 4,
+              "y": 9
+            },
+            {
+              "object": "point",
+              "x": 4,
+              "y": 10
+            },
+            {
+              "object": "point",
+              "x": 4,
+              "y": 11
+            },
+            {
+              "object": "point",
+              "x": 3,
+              "y": 11
+            },
+            {
+              "object": "point",
+              "x": 3,
+              "y": 12
+            },
+            {
+              "object": "point",
+              "x": 3,
+              "y": 13
+            },
+            {
+              "object": "point",
+              "x": 2,
+              "y": 13
+            },
+            {
+              "object": "point",
+              "x": 2,
+              "y": 12
+            },
+            {
+              "object": "point",
+              "x": 1,
+              "y": 12
+            },
+            {
+              "object": "point",
+              "x": 0,
+              "y": 12
+            },
+            {
+              "object": "point",
+              "x": 0,
+              "y": 11
+            },
+            {
+              "object": "point",
+              "x": 1,
+              "y": 11
+            },
+            {
+              "object": "point",
+              "x": 2,
+              "y": 11
+            },
+            {
+              "object": "point",
+              "x": 2,
+              "y": 10
+            },
+            {
+              "object": "point",
+              "x": 1,
+              "y": 10
+            },
+            {
+              "object": "point",
+              "x": 1,
+              "y": 9
+            },
+            {
+              "object": "point",
+              "x": 2,
+              "y": 9
+            },
+            {
+              "object": "point",
+              "x": 2,
+              "y": 8
+            },
+            {
+              "object": "point",
+              "x": 3,
+              "y": 8
+            },
+            {
+              "object": "point",
+              "x": 4,
+              "y": 8
+            },
+            {
+              "object": "point",
+              "x": 4,
+              "y": 7
+            },
+            {
+              "object": "point",
+              "x": 3,
+              "y": 7
+            },
+            {
+              "object": "point",
+              "x": 3,
+              "y": 6
+            },
+            {
+              "object": "point",
+              "x": 4,
+              "y": 6
+            },
+            {
+              "object": "point",
+              "x": 5,
+              "y": 6
+            },
+            {
+              "object": "point",
+              "x": 5,
+              "y": 5
+            },
+            {
+              "object": "point",
+              "x": 6,
+              "y": 5
+            },
+            {
+              "object": "point",
+              "x": 6,
+              "y": 6
+            },
+            {
+              "object": "point",
+              "x": 6,
+              "y": 7
+            },
+            {
+              "object": "point",
+              "x": 6,
+              "y": 8
+            }
+          ],
+          "object": "list"
+        }
+      },
+      {
+        "id": "744a925e-7a45-426b-ad71-e10a5d88fc77",
+        "health": 53,
+        "length": 12,
+        "taunt": "\"tail\"",
+        "name": "Training Snake 8",
+        "object": "snake",
+        "body": {
+          "data": [
+            {
+              "object": "point",
+              "x": 4,
+              "y": 3
+            },
+            {
+              "object": "point",
+              "x": 5,
+              "y": 3
+            },
+            {
+              "object": "point",
+              "x": 5,
+              "y": 2
+            },
+            {
+              "object": "point",
+              "x": 4,
+              "y": 2
+            },
+            {
+              "object": "point",
+              "x": 3,
+              "y": 2
+            },
+            {
+              "object": "point",
+              "x": 2,
+              "y": 2
+            },
+            {
+              "object": "point",
+              "x": 1,
+              "y": 2
+            },
+            {
+              "object": "point",
+              "x": 0,
+              "y": 2
+            },
+            {
+              "object": "point",
+              "x": 0,
+              "y": 3
+            },
+            {
+              "object": "point",
+              "x": 1,
+              "y": 3
+            },
+            {
+              "object": "point",
+              "x": 2,
+              "y": 3
+            },
+            {
+              "object": "point",
+              "x": 3,
+              "y": 3
+            }
+          ],
+          "object": "list"
+        }
+      }
+    ],
+    "object": "list"
+  },
+  "food": {
+    "data": [
+      {
+        "object": "point",
+        "x": 4,
+        "y": 1
+      },
+      {
+        "object": "point",
+        "x": 5,
+        "y": 17
+      },
+      {
+        "object": "point",
+        "x": 0,
+        "y": 16
+      },
+      {
+        "object": "point",
+        "x": 1,
+        "y": 1
+      },
+      {
+        "object": "point",
+        "x": 8,
+        "y": 0
+      },
+      {
+        "object": "point",
+        "x": 7,
+        "y": 3
+      },
+      {
+        "object": "point",
+        "x": 5,
+        "y": 1
+      },
+      {
+        "object": "point",
+        "x": 9,
+        "y": 9
+      },
+      {
+        "object": "point",
+        "x": 9,
+        "y": 8
+      },
+      {
+        "object": "point",
+        "x": 0,
+        "y": 10
+      },
+      {
+        "object": "point",
+        "x": 7,
+        "y": 14
+      }
+    ],
+    "object": "list"
+  },
+  "object": "world",
+  "dead_snakes": {
+    "data": [
+      {
+        "id": "3626d89e-420a-4151-95c7-a33158ce1aed",
+        "health": 83,
+        "length": 5,
+        "taunt": "TIMED OUT",
+        "name": "Show me da wey",
+        "object": "snake",
+        "body": {
+          "data": [
+            {
+              "object": "point",
+              "x": 4,
+              "y": 7
+            },
+            {
+              "object": "point",
+              "x": 4,
+              "y": 8
+            },
+            {
+              "object": "point",
+              "x": 3,
+              "y": 8
+            },
+            {
+              "object": "point",
+              "x": 3,
+              "y": 7
+            },
+            {
+              "object": "point",
+              "x": 4,
+              "y": 7
+            }
+          ],
+          "object": "list"
+        }
+      }
+    ],
+    "object": "list"
+  },
+  "you": {
+    "id": "0c75298e-0045-4f8b-9524-a552f881f08b",
+    "health": 85,
+    "length": 30,
+    "taunt": "TIMED OUT",
+    "name": "chiseler",
+    "object": "snake",
+    "body": {
+      "data": [
+        {
+          "object": "point",
+          "x": 4,
+          "y": 9
+        },
+        {
+          "object": "point",
+          "x": 4,
+          "y": 10
+        },
+        {
+          "object": "point",
+          "x": 4,
+          "y": 11
+        },
+        {
+          "object": "point",
+          "x": 3,
+          "y": 11
+        },
+        {
+          "object": "point",
+          "x": 3,
+          "y": 12
+        },
+        {
+          "object": "point",
+          "x": 3,
+          "y": 13
+        },
+        {
+          "object": "point",
+          "x": 2,
+          "y": 13
+        },
+        {
+          "object": "point",
+          "x": 2,
+          "y": 12
+        },
+        {
+          "object": "point",
+          "x": 1,
+          "y": 12
+        },
+        {
+          "object": "point",
+          "x": 0,
+          "y": 12
+        },
+        {
+          "object": "point",
+          "x": 0,
+          "y": 11
+        },
+        {
+          "object": "point",
+          "x": 1,
+          "y": 11
+        },
+        {
+          "object": "point",
+          "x": 2,
+          "y": 11
+        },
+        {
+          "object": "point",
+          "x": 2,
+          "y": 10
+        },
+        {
+          "object": "point",
+          "x": 1,
+          "y": 10
+        },
+        {
+          "object": "point",
+          "x": 1,
+          "y": 9
+        },
+        {
+          "object": "point",
+          "x": 2,
+          "y": 9
+        },
+        {
+          "object": "point",
+          "x": 2,
+          "y": 8
+        },
+        {
+          "object": "point",
+          "x": 3,
+          "y": 8
+        },
+        {
+          "object": "point",
+          "x": 4,
+          "y": 8
+        },
+        {
+          "object": "point",
+          "x": 4,
+          "y": 7
+        },
+        {
+          "object": "point",
+          "x": 3,
+          "y": 7
+        },
+        {
+          "object": "point",
+          "x": 3,
+          "y": 6
+        },
+        {
+          "object": "point",
+          "x": 4,
+          "y": 6
+        },
+        {
+          "object": "point",
+          "x": 5,
+          "y": 6
+        },
+        {
+          "object": "point",
+          "x": 5,
+          "y": 5
+        },
+        {
+          "object": "point",
+          "x": 6,
+          "y": 5
+        },
+        {
+          "object": "point",
+          "x": 6,
+          "y": 6
+        },
+        {
+          "object": "point",
+          "x": 6,
+          "y": 7
+        },
+        {
+          "object": "point",
+          "x": 6,
+          "y": 8
+        }
+      ],
+      "object": "list"
+    }
+  }
+}`
+
+//https://play.snakedown.com/app/replay/0759963f-6b47-4b43-b87d-b324b9cb411a
+var game_2_foods_nearby_it_choses_to_go_for_closer_one_but_deadend string = `{
+  "width": 17,
+  "height": 15,
+  "id": 7103,
+  "turn": 49,
+  "snakes": {
+    "data": [
+      {
+        "id": "5d076f0f-a3ec-43de-bd72-c36b3dc755ca",
+        "health": 95,
+        "length": 19,
+        "taunt": "\"down\"",
+        "name": "Monosodium Phosphate",
+        "object": "snake",
+        "body": {
+          "data": [
+            {
+              "object": "point",
+              "x": 1,
+              "y": 2
+            },
+            {
+              "object": "point",
+              "x": 1,
+              "y": 1
+            },
+            {
+              "object": "point",
+              "x": 2,
+              "y": 1
+            },
+            {
+              "object": "point",
+              "x": 3,
+              "y": 1
+            },
+            {
+              "object": "point",
+              "x": 4,
+              "y": 1
+            },
+            {
+              "object": "point",
+              "x": 4,
+              "y": 0
+            },
+            {
+              "object": "point",
+              "x": 5,
+              "y": 0
+            },
+            {
+              "object": "point",
+              "x": 6,
+              "y": 0
+            },
+            {
+              "object": "point",
+              "x": 7,
+              "y": 0
+            },
+            {
+              "object": "point",
+              "x": 7,
+              "y": 1
+            },
+            {
+              "object": "point",
+              "x": 8,
+              "y": 1
+            },
+            {
+              "object": "point",
+              "x": 9,
+              "y": 1
+            },
+            {
+              "object": "point",
+              "x": 9,
+              "y": 2
+            },
+            {
+              "object": "point",
+              "x": 9,
+              "y": 3
+            },
+            {
+              "object": "point",
+              "x": 10,
+              "y": 3
+            },
+            {
+              "object": "point",
+              "x": 10,
+              "y": 4
+            },
+            {
+              "object": "point",
+              "x": 10,
+              "y": 5
+            },
+            {
+              "object": "point",
+              "x": 9,
+              "y": 5
+            },
+            {
+              "object": "point",
+              "x": 8,
+              "y": 5
+            }
+          ],
+          "object": "list"
+        }
+      },
+      {
+        "id": "744a925e-7a45-426b-ad71-e10a5d88fc77",
+        "health": 97,
+        "length": 8,
+        "taunt": "\"tail\"",
+        "name": "Training Snake 8",
+        "object": "snake",
+        "body": {
+          "data": [
+            {
+              "object": "point",
+              "x": 10,
+              "y": 13
+            },
+            {
+              "object": "point",
+              "x": 10,
+              "y": 14
+            },
+            {
+              "object": "point",
+              "x": 11,
+              "y": 14
+            },
+            {
+              "object": "point",
+              "x": 12,
+              "y": 14
+            },
+            {
+              "object": "point",
+              "x": 12,
+              "y": 13
+            },
+            {
+              "object": "point",
+              "x": 13,
+              "y": 13
+            },
+            {
+              "object": "point",
+              "x": 14,
+              "y": 13
+            },
+            {
+              "object": "point",
+              "x": 14,
+              "y": 12
+            }
+          ],
+          "object": "list"
+        }
+      },
+      {
+        "id": "0c75298e-0045-4f8b-9524-a552f881f08b",
+        "health": 99,
+        "length": 19,
+        "taunt": "\"You've just been ERASED!!\"",
+        "name": "chiseler",
+        "object": "snake",
+        "body": {
+          "data": [
+            {
+              "object": "point",
+              "x": 9,
+              "y": 6
+            },
+            {
+              "object": "point",
+              "x": 8,
+              "y": 6
+            },
+            {
+              "object": "point",
+              "x": 7,
+              "y": 6
+            },
+            {
+              "object": "point",
+              "x": 6,
+              "y": 6
+            },
+            {
+              "object": "point",
+              "x": 5,
+              "y": 6
+            },
+            {
+              "object": "point",
+              "x": 4,
+              "y": 6
+            },
+            {
+              "object": "point",
+              "x": 3,
+              "y": 6
+            },
+            {
+              "object": "point",
+              "x": 2,
+              "y": 6
+            },
+            {
+              "object": "point",
+              "x": 1,
+              "y": 6
+            },
+            {
+              "object": "point",
+              "x": 1,
+              "y": 7
+            },
+            {
+              "object": "point",
+              "x": 1,
+              "y": 8
+            },
+            {
+              "object": "point",
+              "x": 0,
+              "y": 8
+            },
+            {
+              "object": "point",
+              "x": 0,
+              "y": 7
+            },
+            {
+              "object": "point",
+              "x": 0,
+              "y": 6
+            },
+            {
+              "object": "point",
+              "x": 0,
+              "y": 5
+            },
+            {
+              "object": "point",
+              "x": 1,
+              "y": 5
+            },
+            {
+              "object": "point",
+              "x": 1,
+              "y": 4
+            },
+            {
+              "object": "point",
+              "x": 2,
+              "y": 4
+            },
+            {
+              "object": "point",
+              "x": 2,
+              "y": 3
+            }
+          ],
+          "object": "list"
+        }
+      },
+      {
+        "id": "d9979736-9e2e-4419-b156-e2f808bbf7c3",
+        "health": 96,
+        "length": 21,
+        "taunt": "\"down\"",
+        "name": "whelp aggro",
+        "object": "snake",
+        "body": {
+          "data": [
+            {
+              "object": "point",
+              "x": 11,
+              "y": 2
+            },
+            {
+              "object": "point",
+              "x": 11,
+              "y": 1
+            },
+            {
+              "object": "point",
+              "x": 12,
+              "y": 1
+            },
+            {
+              "object": "point",
+              "x": 13,
+              "y": 1
+            },
+            {
+              "object": "point",
+              "x": 13,
+              "y": 2
+            },
+            {
+              "object": "point",
+              "x": 13,
+              "y": 3
+            },
+            {
+              "object": "point",
+              "x": 13,
+              "y": 4
+            },
+            {
+              "object": "point",
+              "x": 13,
+              "y": 5
+            },
+            {
+              "object": "point",
+              "x": 13,
+              "y": 6
+            },
+            {
+              "object": "point",
+              "x": 12,
+              "y": 6
+            },
+            {
+              "object": "point",
+              "x": 11,
+              "y": 6
+            },
+            {
+              "object": "point",
+              "x": 11,
+              "y": 7
+            },
+            {
+              "object": "point",
+              "x": 10,
+              "y": 7
+            },
+            {
+              "object": "point",
+              "x": 10,
+              "y": 8
+            },
+            {
+              "object": "point",
+              "x": 10,
+              "y": 9
+            },
+            {
+              "object": "point",
+              "x": 10,
+              "y": 10
+            },
+            {
+              "object": "point",
+              "x": 9,
+              "y": 10
+            },
+            {
+              "object": "point",
+              "x": 8,
+              "y": 10
+            },
+            {
+              "object": "point",
+              "x": 8,
+              "y": 9
+            },
+            {
+              "object": "point",
+              "x": 7,
+              "y": 9
+            },
+            {
+              "object": "point",
+              "x": 6,
+              "y": 9
+            }
+          ],
+          "object": "list"
+        }
+      },
+      {
+        "id": "7c855e7a-9b60-46dc-8b30-381ecf26afba",
+        "health": 100,
+        "length": 22,
+        "taunt": "\"Moving left, targeting Food\"",
+        "name": "Slashterix",
+        "object": "snake",
+        "body": {
+          "data": [
+            {
+              "object": "point",
+              "x": 8,
+              "y": 11
+            },
+            {
+              "object": "point",
+              "x": 9,
+              "y": 11
+            },
+            {
+              "object": "point",
+              "x": 10,
+              "y": 11
+            },
+            {
+              "object": "point",
+              "x": 11,
+              "y": 11
+            },
+            {
+              "object": "point",
+              "x": 12,
+              "y": 11
+            },
+            {
+              "object": "point",
+              "x": 12,
+              "y": 10
+            },
+            {
+              "object": "point",
+              "x": 13,
+              "y": 10
+            },
+            {
+              "object": "point",
+              "x": 14,
+              "y": 10
+            },
+            {
+              "object": "point",
+              "x": 15,
+              "y": 10
+            },
+            {
+              "object": "point",
+              "x": 15,
+              "y": 11
+            },
+            {
+              "object": "point",
+              "x": 15,
+              "y": 12
+            },
+            {
+              "object": "point",
+              "x": 16,
+              "y": 12
+            },
+            {
+              "object": "point",
+              "x": 16,
+              "y": 11
+            },
+            {
+              "object": "point",
+              "x": 16,
+              "y": 10
+            },
+            {
+              "object": "point",
+              "x": 16,
+              "y": 9
+            },
+            {
+              "object": "point",
+              "x": 16,
+              "y": 8
+            },
+            {
+              "object": "point",
+              "x": 16,
+              "y": 7
+            },
+            {
+              "object": "point",
+              "x": 16,
+              "y": 6
+            },
+            {
+              "object": "point",
+              "x": 16,
+              "y": 5
+            },
+            {
+              "object": "point",
+              "x": 16,
+              "y": 4
+            },
+            {
+              "object": "point",
+              "x": 15,
+              "y": 4
+            },
+            {
+              "object": "point",
+              "x": 15,
+              "y": 4
+            }
+          ],
+          "object": "list"
+        }
+      }
+    ],
+    "object": "list"
+  },
+  "food": {
+    "data": [
+      {
+        "object": "point",
+        "x": 11,
+        "y": 3
+      },
+      {
+        "object": "point",
+        "x": 9,
+        "y": 0
+      },
+      {
+        "object": "point",
+        "x": 12,
+        "y": 5
+      },
+      {
+        "object": "point",
+        "x": 12,
+        "y": 7
+      },
+      {
+        "object": "point",
+        "x": 5,
+        "y": 13
+      },
+      {
+        "object": "point",
+        "x": 9,
+        "y": 13
+      },
+      {
+        "object": "point",
+        "x": 5,
+        "y": 14
+      },
+      {
+        "object": "point",
+        "x": 7,
+        "y": 10
+      },
+      {
+        "object": "point",
+        "x": 15,
+        "y": 0
+      },
+      {
+        "object": "point",
+        "x": 9,
+        "y": 12
+      },
+      {
+        "object": "point",
+        "x": 6,
+        "y": 11
+      },
+      {
+        "object": "point",
+        "x": 10,
+        "y": 6
+      },
+      {
+        "object": "point",
+        "x": 9,
+        "y": 8
+      },
+      {
+        "object": "point",
+        "x": 4,
+        "y": 11
+      },
+      {
+        "object": "point",
+        "x": 0,
+        "y": 2
+      },
+      {
+        "object": "point",
+        "x": 14,
+        "y": 3
+      },
+      {
+        "object": "point",
+        "x": 12,
+        "y": 0
+      },
+      {
+        "object": "point",
+        "x": 3,
+        "y": 4
+      },
+      {
+        "object": "point",
+        "x": 0,
+        "y": 14
+      },
+      {
+        "object": "point",
+        "x": 2,
+        "y": 12
+      },
+      {
+        "object": "point",
+        "x": 1,
+        "y": 14
+      },
+      {
+        "object": "point",
+        "x": 15,
+        "y": 2
+      }
+    ],
+    "object": "list"
+  },
+  "object": "world",
+  "dead_snakes": {
+    "data": [],
+    "object": "list"
+  },
+  "you": {
+    "id": "0c75298e-0045-4f8b-9524-a552f881f08b",
+    "health": 99,
+    "length": 19,
+    "taunt": "\"You've just been ERASED!!\"",
+    "name": "chiseler",
+    "object": "snake",
+    "body": {
+      "data": [
+        {
+          "object": "point",
+          "x": 9,
+          "y": 6
+        },
+        {
+          "object": "point",
+          "x": 8,
+          "y": 6
+        },
+        {
+          "object": "point",
+          "x": 7,
+          "y": 6
+        },
+        {
+          "object": "point",
+          "x": 6,
+          "y": 6
+        },
+        {
+          "object": "point",
+          "x": 5,
+          "y": 6
+        },
+        {
+          "object": "point",
+          "x": 4,
+          "y": 6
+        },
+        {
+          "object": "point",
+          "x": 3,
+          "y": 6
+        },
+        {
+          "object": "point",
+          "x": 2,
+          "y": 6
+        },
+        {
+          "object": "point",
+          "x": 1,
+          "y": 6
+        },
+        {
+          "object": "point",
+          "x": 1,
+          "y": 7
+        },
+        {
+          "object": "point",
+          "x": 1,
+          "y": 8
+        },
+        {
+          "object": "point",
+          "x": 0,
+          "y": 8
+        },
+        {
+          "object": "point",
+          "x": 0,
+          "y": 7
+        },
+        {
+          "object": "point",
+          "x": 0,
+          "y": 6
+        },
+        {
+          "object": "point",
+          "x": 0,
+          "y": 5
+        },
+        {
+          "object": "point",
+          "x": 1,
+          "y": 5
+        },
+        {
+          "object": "point",
+          "x": 1,
+          "y": 4
+        },
+        {
+          "object": "point",
+          "x": 2,
+          "y": 4
+        },
+        {
+          "object": "point",
+          "x": 2,
+          "y": 3
         }
       ],
       "object": "list"

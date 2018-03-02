@@ -58,7 +58,7 @@ func Strategize(world *MoveRequest) string {
 	}
 
 	// if path to tail was blocked, check if path to food is clear (even if not hungry)
-	if path_to_food != nil {
+	if path_to_food != nil && path_from_food_back_to_tail != nil {
 		return movement_map[path_to_food[0]]
 	}
 
@@ -66,6 +66,7 @@ func Strategize(world *MoveRequest) string {
 	for i := 1; i < 5; i++ {
 		if IsValidPointToMoveTo(GetNextPointBasedOnDirection(i, my_head_location), world) && !IsRiskyPoint(GetNextPointBasedOnDirection(i, my_head_location), world) {
 			path_map = []int{i}
+			break
 		}
 	}
 	// if still no path, take risky options
@@ -73,6 +74,7 @@ func Strategize(world *MoveRequest) string {
 		for i := 1; i < 5; i++ {
 			if IsValidPointToMoveTo(GetNextPointBasedOnDirection(i, my_head_location), world) {
 				path_map = []int{i}
+				break
 			}
 		}
 	}
