@@ -29,7 +29,7 @@ func Strategize(world *MoveRequest) string {
 
 	var path_map []int
 
-	//find paths to: food, tail
+	//find paths to: food, tail, and path between the food and out tail
 	path_to_food := ShortestPath(my_head_location, food_location, world)
 	var path_to_tail []int
 	for _, possible_target_destination := range near_tail_locations {
@@ -38,9 +38,16 @@ func Strategize(world *MoveRequest) string {
 			break
 		}
 	}
+	var path_from_food_back_to_tail []int
+	for _, possible_target_destination := range near_tail_locations {
+		path_from_food_back_to_tail = ShortestPath(food_location, possible_target_destination, world)
+		if path_from_food_back_to_tail != nil {
+			break
+		}
+	}
 
 	// first, check if we should aim for food
-	if ShouldSearchForFood(world) && path_to_food != nil {
+	if ShouldSearchForFood(world) && path_to_food != nil && path_from_food_back_to_tail != nil {
 		return movement_map[path_to_food[0]]
 	}
 
