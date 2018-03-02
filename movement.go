@@ -211,7 +211,7 @@ func ShortestPath(source Point, destination Point, world *MoveRequest) []int {
 			next_position := GetNextPointBasedOnDirection(next_move, parent)
 
 			// if the neighbor is an invalid point (e.g., wall, other snake)
-			if !IsValidPointToMoveTo(next_position, world) || IsRiskyPoint(next_position, world) {
+			if !IsValidPointToMoveTo(next_position, world) || (IsRiskyPoint(next_position, world) && len(map_of_paths_to_any_point[parent]) == 0) {
 				continue
 			}
 			// if already visited this neighbor, skip it
