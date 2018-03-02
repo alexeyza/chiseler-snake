@@ -19,7 +19,6 @@ var minimu_snake_size = 10
 // This is the main movement method.
 // Returns a string indication the next movement direction.
 func Strategize(world *MoveRequest) string {
-
 	// Get the location points of our snake's head, tail,
 	// points near our tail, and our targed food location
 	my_head_location := world.You.Head()
