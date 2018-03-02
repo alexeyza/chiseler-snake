@@ -20,7 +20,7 @@ func TestMoveHandler(t *testing.T) {
 		{name: "(3) turn into dead end", request_msg: game_turn_into_dead_end, fail_returned_msg: "{\"move\":\"up\"}\n"},
 		{name: "(4) path to tail blocked, can't find a path", request_msg: game_cant_find_path_to_tail, fail_returned_msg: "{\"move\":\"up\"}\n"},
 		{name: "(5) path to tail blocked by another smaller snake", request_msg: game_no_path_to_tail, fail_returned_msg: "{\"move\":\"up\"}\n"},
-		{name: "(6) killed himself even though near food and smaller snake", request_msg: game_killed_himself_though_food_nearby_and_smaller_enemy_snake, success_returned_msg: "{\"move\":\"right\"}\n"},
+		{name: "(6) killed himself even though near food and smaller snake", request_msg: game_killed_himself_though_food_nearby_and_smaller_enemy_snake, fail_returned_msg: "{\"move\":\"up\"}\n"},
 		{name: "(7) kill himself when smaller snake blocked the way, even though could eat it", request_msg: game_smaller_snake_blocking_way, success_returned_msg: "{\"move\":\"down\"}\n"},
 	}
 
@@ -59,6 +59,7 @@ func TestMoveHandler(t *testing.T) {
 	}
 }
 
+//https://play.snakedown.com/app/replay/a04b3492-0fa6-433b-90d2-5099ab22c188
 var game_collide_with_larger_snake string = `{
   "width": 20,
   "height": 20,
@@ -1241,6 +1242,7 @@ var game_turn_into_dead_end string = `{
   }
 }`
 
+//https://play.snakedown.com/app/replay/225ad427-906e-41f2-beac-d8fb01af8e25
 var game_cant_find_path_to_tail string = `{
   "width": 18,
   "height": 7,
@@ -1482,6 +1484,7 @@ var game_cant_find_path_to_tail string = `{
   }
 }`
 
+//https://play.snakedown.com/app/replay/6c48dd37-cd93-4aab-93d6-2c4abd26b3b0
 var game_no_path_to_tail string = `{
   "width": 17,
   "height": 19,
@@ -2601,6 +2604,7 @@ var game_killed_himself_though_food_nearby_and_smaller_enemy_snake string = `{
   }
 }`
 
+//https://play.snakedown.com/app/replay/164769b5-9818-447b-a71d-338987f0aaec
 var game_smaller_snake_blocking_way string = `{
   "width": 10,
   "height": 14,

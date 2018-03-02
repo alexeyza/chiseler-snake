@@ -28,40 +28,41 @@ func Strategize(world *MoveRequest) string {
 	food_location := FindFood(my_head_location, world)
 
 	var path_map []int
-	// first, check if we should aim for food
-	if ShouldSearchForFood(world) {
-		// find path towards the food
-		path_map = ShortestPath(my_head_location, food_location, world)
 
-		//if the path to food blocked, spin in place until path to food is clear
-		if path_map == nil {
-			for _, possible_target_destination := range near_tail_locations {
-				path_map = ShortestPath(my_head_location, possible_target_destination, world)
-				if path_map != nil {
-					break
-				}
-			}
-		}
-		// if we don't need food, spin in place
-	} else {
-		for _, possible_target_destination := range near_tail_locations {
-			path_map = ShortestPath(my_head_location, possible_target_destination, world)
-			if path_map != nil {
-				break
-			}
+	//find paths to: food, tail
+	path_to_food := ShortestPath(my_head_location, food_location, world)
+	var path_to_tail []int
+	for _, possible_target_destination := range near_tail_locations {
+		path_to_tail = ShortestPath(my_head_location, possible_target_destination, world)
+		if path_to_tail != nil {
+			break
 		}
 	}
-	// if haven't found to either food or tail
+
+	// first, check if we should aim for food
+	if ShouldSearchForFood(world) && path_to_food != nil {
+		return movement_map[path_to_food[0]]
+	}
+
+	// if we don't need food or if the path to food is blocked, spin in place
+	if path_to_tail != nil {
+		return movement_map[path_to_tail[0]]
+	}
+
+	// if path to tail was blocked, check if path to food is clear (even if not hungry)
+	if path_to_food != nil {
+		return movement_map[path_to_food[0]]
+	}
+
+	// if haven't found a path to either food or tail
+	for i := 1; i < 5; i++ {
+		if IsValidPointToMoveTo(GetNextPointBasedOnDirection(i, my_head_location), world) {
+			path_map = []int{i}
+		}
+	}
+	// if no valid path found at all, return "up" as the next direction
 	if path_map == nil {
-		for i := 1; i < 5; i++ {
-			if IsValidPointToMoveTo(GetNextPointBasedOnDirection(i, my_head_location), world) {
-				path_map = []int{i}
-			}
-		}
-		// if no valid point found, return up
-		if path_map == nil {
-			path_map = []int{1}
-		}
+		path_map = []int{1}
 	}
 	return movement_map[path_map[0]]
 }
@@ -262,5 +263,5 @@ func ShouldSearchForFood(world *MoveRequest) bool {
 	}
 
 	// check if our health below a threshold, or if we haven't reached minimum snake size
-	return world.You.Health < health_threshold || world.You.Length < minimu_snake_size
+	return world.You.Health < health_threshold+world.You.Length || world.You.Length < minimu_snake_size
 }
