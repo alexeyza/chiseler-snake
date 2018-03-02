@@ -36,3 +36,37 @@ func (snake Snake) GeneratePossibleMoves(state *BoardState) map[int]*Point {
 	}
 	return moves
 }
+func (snake *Snake) MoveInDirection(direction int, world *MoveRequest) {
+	var previous_point Point
+	has_eaten := false
+	for index, point := range snake.Body.Data {
+		if index == 0 {
+			previous_point = point
+			if point.InArray(world.Food.Data) {
+				has_eaten = true
+			}
+			if direction == 1 {
+				snake.Body.Data[index].Y -= 1
+			} else if direction == 2 {
+				snake.Body.Data[index].X += 1
+			} else if direction == 3 {
+				snake.Body.Data[index].Y += 1
+			} else if direction == 4 {
+				snake.Body.Data[index].X -= 1
+			}
+		} else {
+			temp := previous_point
+			previous_point = snake.Body.Data[index]
+			snake.Body.Data[index] = temp
+		}
+		if has_eaten && (index+1) == len(snake.Body.Data) {
+			snake.Body.Data = append(snake.Body.Data, previous_point)
+		}
+	}
+}
+func (snake Snake) Equals(other_snake Snake) bool {
+	if snake.Id == other_snake.Id {
+		return true
+	}
+	return false
+}
