@@ -2,6 +2,7 @@ package main
 
 import (
 	"io/ioutil"
+	"net"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -26,7 +27,16 @@ func TestMoveHandler(t *testing.T) {
 
 	for _, test_case := range test_cases {
 
-		req, err := http.NewRequest("POST", "//142.104.68.152:9000/move", strings.NewReader(test_case.request_msg))
+		// find local IP address
+		conn, err := net.Dial("udp", "8.8.8.8:80")
+		if err != nil {
+			t.Fatalf("couldn't find local IP to run tests")
+		}
+		defer conn.Close()
+		localAddr := conn.LocalAddr().(*net.UDPAddr)
+
+		// Generate the request to be sent to the snake
+		req, err := http.NewRequest("POST", "//"+localAddr.IP.String()+":9000/move", strings.NewReader(test_case.request_msg))
 		if err != nil {
 			t.Fatalf("request failed %v", err)
 		}
