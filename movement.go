@@ -62,12 +62,21 @@ func Strategize(world *MoveRequest) string {
 		return movement_map[path_to_food[0]]
 	}
 
-	// if haven't found a path to either food or tail
+	// if haven't found a path to either food or tail, look for any valid and non risky direction
 	for i := 1; i < 5; i++ {
-		if IsValidPointToMoveTo(GetNextPointBasedOnDirection(i, my_head_location), world) {
+		if IsValidPointToMoveTo(GetNextPointBasedOnDirection(i, my_head_location), world) && !IsRiskyPoint(GetNextPointBasedOnDirection(i, my_head_location), world) {
 			path_map = []int{i}
 		}
 	}
+	// if still no path, take risky options
+	if path_map == nil {
+		for i := 1; i < 5; i++ {
+			if IsValidPointToMoveTo(GetNextPointBasedOnDirection(i, my_head_location), world) {
+				path_map = []int{i}
+			}
+		}
+	}
+
 	// if no valid path found at all, return "up" as the next direction
 	if path_map == nil {
 		path_map = []int{1}
@@ -90,9 +99,6 @@ func IsGoingToHitOthersAtPoint(p Point, world *MoveRequest) bool {
 	for _, enemy_snake := range world.Snakes.Data {
 		// first, check if we hit any of the enemy snake bodies
 		if IsGoingToHitHimselfAtPoint(p, enemy_snake) {
-			return true
-		}
-		if IsRiskyPoint(p, world) {
 			return true
 		}
 	}
@@ -203,7 +209,7 @@ func ShortestPath(source Point, destination Point, world *MoveRequest) []int {
 			next_position := GetNextPointBasedOnDirection(next_move, parent)
 
 			// if the neighbor is an invalid point (e.g., wall, other snake)
-			if !IsValidPointToMoveTo(next_position, world) {
+			if !IsValidPointToMoveTo(next_position, world) || IsRiskyPoint(next_position, world) {
 				continue
 			}
 			// if already visited this neighbor, skip it
@@ -247,7 +253,7 @@ func GetAdjacentPoints(point Point) []Point {
 func GetValidAdjacentPoints(point Point, world *MoveRequest) []Point {
 	var output []Point
 	for _, adj_point := range GetAdjacentPoints(point) {
-		if IsValidPointToMoveTo(adj_point, world) {
+		if IsValidPointToMoveTo(adj_point, world) || IsRiskyPoint(adj_point, world) {
 			output = append(output, adj_point)
 		}
 	}
