@@ -38,6 +38,7 @@ func Strategize(world *MoveRequest) string {
 			break
 		}
 	}
+	// the following bit about path from food back to tail may not be ideal, and could be replaced later
 	var path_from_food_back_to_tail []int
 	for _, possible_target_destination := range near_tail_locations {
 		path_from_food_back_to_tail = ShortestPath(food_location, possible_target_destination, world)
