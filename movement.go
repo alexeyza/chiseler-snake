@@ -58,6 +58,10 @@ func Strategize(world *MoveRequest) string {
 				path_map = []int{i}
 			}
 		}
+		// if no valid point found, return up
+		if path_map == nil {
+			path_map = []int{1}
+		}
 	}
 	return movement_map[path_map[0]]
 }
@@ -97,7 +101,7 @@ func IsRiskyPoint(p Point, world *MoveRequest) bool {
 		// next, check if we may hit an enemy snake's head,
 		// and if that snake's health is higher than ours, mark this as invalid move
 		for _, position_next_to_enemys_head := range GetAdjacentPoints(enemy_snake.Head()) {
-			if position_next_to_enemys_head.Equals(p) && enemy_snake.Health > world.You.Health {
+			if position_next_to_enemys_head.Equals(p) && enemy_snake.Length >= world.You.Length {
 				return true
 			}
 		}

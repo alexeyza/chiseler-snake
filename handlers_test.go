@@ -15,13 +15,13 @@ func TestMoveHandler(t *testing.T) {
 		success_returned_msg string // optional: use either success or fail return values
 		fail_returned_msg    string // optional
 	}{
-		{name: "colide with larger snake", request_msg: game_collide_with_larger_snake, fail_returned_msg: "{\"move\":\"right\"}\n"},
-		{name: "colide with same-size snake", request_msg: game_collide_with_same_size_snake, fail_returned_msg: "{\"move\":\"down\"}\n"},
-		{name: "turn into dead end", request_msg: game_turn_into_dead_end, fail_returned_msg: "{\"move\":\"up\"}\n"},
-		//{name: "path to tail blocked, can't find a path", request_msg: game_cant_find_path_to_tail, fail_returned_msg: "{\"move\":\"up\"}\n"},
-		//{name: "path to tail blocked by another smaller snake", request_msg: game_no_path_to_tail, fail_returned_msg: "{\"move\":\"up\"}\n"},
-		//{name: "killed himself even though near food and smaller snake", request_msg: game_killed_himself_though_food_nearby_and_smaller_enemy_snake, success_returned_msg: "{\"move\":\"right\"}\n"},
-		//{name: "kill himself when smaller snake blocked the way, even though could eat it", request_msg: game_smaller_snake_blocking_way, success_returned_msg: "{\"move\":\"down\"}\n"},
+		{name: "(1) colide with larger snake", request_msg: game_collide_with_larger_snake, fail_returned_msg: "{\"move\":\"right\"}\n"},
+		{name: "(2) colide with same-size snake", request_msg: game_collide_with_same_size_snake, fail_returned_msg: "{\"move\":\"down\"}\n"},
+		{name: "(3) turn into dead end", request_msg: game_turn_into_dead_end, fail_returned_msg: "{\"move\":\"up\"}\n"},
+		{name: "(4) path to tail blocked, can't find a path", request_msg: game_cant_find_path_to_tail, fail_returned_msg: "{\"move\":\"up\"}\n"},
+		{name: "(5) path to tail blocked by another smaller snake", request_msg: game_no_path_to_tail, fail_returned_msg: "{\"move\":\"up\"}\n"},
+		{name: "(6) killed himself even though near food and smaller snake", request_msg: game_killed_himself_though_food_nearby_and_smaller_enemy_snake, success_returned_msg: "{\"move\":\"right\"}\n"},
+		{name: "(7) kill himself when smaller snake blocked the way, even though could eat it", request_msg: game_smaller_snake_blocking_way, success_returned_msg: "{\"move\":\"down\"}\n"},
 	}
 
 	for _, test_case := range test_cases {
@@ -52,7 +52,7 @@ func TestMoveHandler(t *testing.T) {
 		}
 		if test_case.success_returned_msg != "" {
 			// checks if the returned value would lead us to death
-			if string(b) == test_case.success_returned_msg {
+			if string(b) != test_case.success_returned_msg {
 				t.Errorf(test_case.name)
 			}
 		}
@@ -1846,6 +1846,7 @@ var game_no_path_to_tail string = `{
   }
 }`
 
+//https://play.snakedown.com/app/replay/febe0f5b-b29e-45f9-9809-500261f65de9
 var game_killed_himself_though_food_nearby_and_smaller_enemy_snake string = `{
   "width": 21,
   "height": 11,
