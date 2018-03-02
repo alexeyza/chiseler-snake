@@ -28,28 +28,41 @@ func Strategize(world *MoveRequest) string {
 	food_location := FindFood(my_head_location, world)
 
 	var path_map []int
-	// first, check if we should aim for food
-	if ShouldSearchForFood(world) {
-		// find path towards the food
-		path_map = ShortestPath(my_head_location, food_location, world)
 
-		//if the path to food blocked, spin in place until path to food is clear
-		if path_map == nil {
-			for _, possible_target_destination := range near_tail_locations {
-				path_map = ShortestPath(my_head_location, possible_target_destination, world)
-				if path_map != nil {
-					break
-				}
-			}
+	//find paths to: food, tail
+	path_to_food := ShortestPath(my_head_location, food_location, world)
+	var path_to_tail []int
+	for _, possible_target_destination := range near_tail_locations {
+		path_to_tail = ShortestPath(my_head_location, possible_target_destination, world)
+		if path_to_tail != nil {
+			break
 		}
-		// if we don't need food, spin in place
-	} else {
-		for _, possible_target_destination := range near_tail_locations {
-			path_map = ShortestPath(my_head_location, possible_target_destination, world)
-			if path_map != nil {
-				break
-			}
+	}
+
+	// first, check if we should aim for food
+	if ShouldSearchForFood(world) && path_to_food != nil {
+		return movement_map[path_to_food[0]]
+	}
+
+	// if we don't need food or if the path to food is blocked, spin in place
+	if path_to_tail != nil {
+		return movement_map[path_to_tail[0]]
+	}
+
+	// if path to tail was blocked, check if path to food is clear (even if not hungry)
+	if path_to_food != nil {
+		return movement_map[path_to_food[0]]
+	}
+
+	// if haven't found a path to either food or tail
+	for i := 1; i < 5; i++ {
+		if IsValidPointToMoveTo(GetNextPointBasedOnDirection(i, my_head_location), world) {
+			path_map = []int{i}
 		}
+	}
+	// if no valid path found at all, return "up" as the next direction
+	if path_map == nil {
+		path_map = []int{1}
 	}
 	return movement_map[path_map[0]]
 }
@@ -88,8 +101,8 @@ func IsRiskyPoint(p Point, world *MoveRequest) bool {
 		}
 		// next, check if we may hit an enemy snake's head,
 		// and if that snake's health is higher than ours, mark this as invalid move
-		for _, position_next_to_enemys_head := range GetAdjacentPoints(enemy_snake.Head(), world) {
-			if position_next_to_enemys_head.Equals(p) && enemy_snake.Health > world.You.Health {
+		for _, position_next_to_enemys_head := range GetAdjacentPoints(enemy_snake.Head()) {
+			if position_next_to_enemys_head.Equals(p) && enemy_snake.Length >= world.You.Length {
 				return true
 			}
 		}
@@ -171,7 +184,9 @@ func ShortestPath(source Point, destination Point, world *MoveRequest) []int {
 
 		// if we reached destination, stop
 		if parent.Equals(destination) {
-			break
+			// return the list of directions from source to destination
+			// note: we actually have a list of directions from the source to any other point on the board
+			return map_of_paths_to_any_point[destination]
 		}
 
 		// for every neighboring/adjacent point to the current point
@@ -199,9 +214,8 @@ func ShortestPath(source Point, destination Point, world *MoveRequest) []int {
 		// mark the current point as visited
 		visited[parent] = true
 	}
-	// return the list of directions from source to destination
-	// note: we actually have a list of directions from the source to any other point on the board
-	return map_of_paths_to_any_point[destination]
+
+	return nil
 }
 
 // This method returns the tail point of a given snake.
@@ -211,7 +225,7 @@ func GetTail(snake Snake) Point {
 
 // This method returns the adjacent points, based on the given point
 // Does NOT check if they are valid points to move to.
-func GetAdjacentPoints(point Point, world *MoveRequest) []Point {
+func GetAdjacentPoints(point Point) []Point {
 	output := []Point{
 		Point{X: point.X + 1, Y: point.Y},
 		Point{X: point.X, Y: point.Y + 1},
@@ -224,7 +238,7 @@ func GetAdjacentPoints(point Point, world *MoveRequest) []Point {
 // This method returns the adjacent points. Only returns valid points.
 func GetValidAdjacentPoints(point Point, world *MoveRequest) []Point {
 	var output []Point
-	for _, adj_point := range GetAdjacentPoints(point, world) {
+	for _, adj_point := range GetAdjacentPoints(point) {
 		if IsValidPointToMoveTo(adj_point, world) {
 			output = append(output, adj_point)
 		}
@@ -249,5 +263,5 @@ func ShouldSearchForFood(world *MoveRequest) bool {
 	}
 
 	// check if our health below a threshold, or if we haven't reached minimum snake size
-	return world.You.Health < health_threshold || world.You.Length < minimu_snake_size
+	return world.You.Health < health_threshold+world.You.Length || world.You.Length < minimu_snake_size
 }
