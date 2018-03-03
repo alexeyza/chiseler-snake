@@ -176,7 +176,7 @@ func FindFood(location Point, world *MoveRequest) Point {
 		dist := location.distance(food_source)
 		availible_space := floodfill(food_source, world)
 
-		if dist < closest_distance && availible_space > world.You.Length*2 {
+		if dist <= closest_distance && availible_space > world.You.Length+2 {
 			closest_distance = dist
 			closest_food = food_source
 		}
