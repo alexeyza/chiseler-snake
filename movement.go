@@ -270,14 +270,18 @@ func ShouldSearchForFood(world *MoveRequest) bool {
 
 	my_lenght := world.You.Length
 
-	// check if our length is lower than the other snakes, if yes, find food to grow
-	for _, snake := range world.Snakes.Data {
-		// skip our snake
-		if snake.Id == world.You.Id {
-			continue
-		}
-		if snake.Length >= my_lenght {
-			return true
+	// if there are at least 2 enemy snakes
+	if len(world.Snakes.Data) > 2 {
+		// check if our length is lower than the other snakes, if yes, find food to grow
+		for _, snake := range world.Snakes.Data {
+			// skip our snake
+			if snake.Id == world.You.Id {
+				continue
+			}
+
+			if snake.Length >= my_lenght {
+				return true
+			}
 		}
 	}
 	distance_to_food := len(ShortestPath(world.You.Head(), FindFood(world.You.Head(), world), world))
