@@ -261,7 +261,7 @@ func GetAdjacentPoints(point Point) []Point {
 func GetValidAdjacentPoints(point Point, world *MoveRequest) []Point {
 	var output []Point
 	for _, adj_point := range GetAdjacentPoints(point) {
-		if IsValidPointToMoveTo(adj_point, world) || IsRiskyPoint(adj_point, world) {
+		if IsValidPointToMoveTo(adj_point, world) { //|| IsRiskyPoint(adj_point, world) {
 			output = append(output, adj_point)
 		}
 	}
