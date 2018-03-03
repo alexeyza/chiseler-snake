@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"gopkg.in/oleiade/lane.v1"
 	"math"
 )
@@ -59,13 +58,6 @@ func Strategize(world *MoveRequest) string {
 		return movement_map[path_to_food[0]]
 	}
 
-	for _, snake := range world.Snakes.Data {
-		path_to_kill_other_snake := ShortestPath(my_head_location, snake.Head(), world)
-		if path_to_kill_other_snake != nil {
-			return movement_map[path_to_kill_other_snake[0]]
-		}
-	}
-
 	// if haven't found a path to either food or tail, look for any valid and non risky direction
 	max_space := 0
 	for i := 1; i < 5; i++ {
@@ -93,12 +85,18 @@ func Strategize(world *MoveRequest) string {
 			}
 		}
 	}
+
+	for _, snake := range world.Snakes.Data {
+		path_to_kill_other_snake := ShortestPath(my_head_location, snake.Head(), world)
+		if path_to_kill_other_snake != nil {
+			return movement_map[path_to_kill_other_snake[0]]
+		}
+	}
+
 	// if no valid path found at all, return "up" as the next direction
 	if path_map == nil {
 		path_map = []int{1}
 	}
-
-	fmt.Println(path_map)
 	return movement_map[path_map[0]]
 }
 
@@ -239,7 +237,7 @@ func ShortestPath(source Point, destination Point, world *MoveRequest) []int {
 			next_position := GetNextPointBasedOnDirection(next_move, parent)
 
 			// if the neighbor is an invalid point (e.g., wall, other snake)
-			if !IsValidPointToMoveTo(next_position, world) || IsRiskyPoint(next_position, world) {
+			if !IsValidPointToMoveTo(next_position, world) { //|| IsRiskyPoint(next_position, world) {
 				continue
 			}
 			// if already visited this neighbor, skip it
