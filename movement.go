@@ -85,8 +85,8 @@ func Strategize(world *MoveRequest) string {
 
 // This method checks if a snake going to hit himself at the given point 'p'.
 func IsGoingToHitHimselfAtPoint(p Point, snake Snake) bool {
-	for _, body_points := range snake.Body.Data {
-		if p.Equals(body_points) {
+	for index, body_points := range snake.Body.Data {
+		if p.Equals(body_points) && index != snake.Length-1 {
 			return true
 		}
 	}
