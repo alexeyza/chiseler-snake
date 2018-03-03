@@ -37,6 +37,10 @@ func Strategize(world *MoveRequest) string {
 			break
 		}
 	}
+	// if couldn't find path near the tail, aim for the actual tail
+	if path_to_tail == nil {
+		path_to_tail = ShortestPath(my_head_location, my_tail_location, world)
+	}
 
 	// first, check if we should aim for food
 	if ShouldSearchForFood(world) && path_to_food != nil {
