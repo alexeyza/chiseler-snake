@@ -186,21 +186,49 @@ func GetNextPointBasedOnDirection(direction int, currentPoint Point) Point {
 
 // This method returns a location of food that is close by and is not a dead end.
 func FindFood(location Point, world *MoveRequest) Point {
-	closest_distance := math.MaxFloat64
-	closest_food := world.Food.Data[0]
 	max_space := 0
+	var foodbit_candidates []Point
 	for _, food_source := range world.Food.Data {
 
-		dist := location.distance(food_source)
 		availible_space := floodfill(food_source, world)
 
-		if (dist <= closest_distance && availible_space > world.You.Length+2) || availible_space > max_space {
-			closest_distance = dist
-			closest_food = food_source
+		if availible_space > world.You.Length+2 || availible_space > max_space {
 			max_space = availible_space
+			foodbit_candidates = append(foodbit_candidates, food_source)
 		}
 	}
+	food_risk_index := GetFoodRisk(world)
+	minimum_risk := math.MaxInt64
+	closest_food := world.Food.Data[0]
+	for _, candidate := range foodbit_candidates {
+		if food_risk_index[candidate] < minimum_risk {
+			minimum_risk = food_risk_index[candidate]
+			closest_food = candidate
+		}
+	}
+
 	return closest_food
+}
+
+func GetFoodRisk(world *MoveRequest) map[Point]int {
+	food := make(map[Point]int)
+	for _, foodbit := range world.Food.Data {
+		risk := math.MaxInt64
+		closest_snake := world.You
+		for _, enemy_snake := range world.Snakes.Data {
+			distance_to_food := len(ShortestPath(enemy_snake.Head(), foodbit, world))
+			if distance_to_food < risk {
+				risk = math.MaxInt64 - distance_to_food
+				closest_snake = enemy_snake
+			}
+		}
+		if closest_snake.Id == world.You.Id {
+			food[foodbit] = 0
+		} else {
+			food[foodbit] = risk
+		}
+	}
+	return food
 }
 
 // This method returns a path towards the given destination (returns an array of directions).
