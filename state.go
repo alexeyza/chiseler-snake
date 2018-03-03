@@ -1,6 +1,8 @@
 package main
 
+import "log"
 import "math"
+import "time"
 
 type BoardState struct {
 	BoardLength   int
@@ -48,7 +50,7 @@ func (state *BoardState) NewBoardStateFromBoardState(direction int, others map[s
 			new_state.Food = taken_space.RemoveFromArray(new_state.Food)
 		}
 	}
-	new_state.ScoreState(move_req)
+	new_state.ScoreState(move_req, 1)
 	state.Children = append(state.Children, &new_state)
 	return &new_state
 }
@@ -57,13 +59,31 @@ func (state *BoardState) GetDistanceFromClosestFood() (float64, Point) {
 	var candidate_food Point
 	for _, food_item := range state.Food {
 		if food_item.GetDistance(state.You.Head()) < minimum_distance {
-			minimum_distance = food_item.GetDistance(state.You.Head())
+			minimum_distance = math.MaxFloat64 - food_item.GetDistance(state.You.Head())
 			candidate_food = food_item
 		}
 	}
 	return minimum_distance, candidate_food
 }
-func (state *BoardState) ScoreState(move_req *MoveRequest) {
-	score, _ := state.GetDistanceFromClosestFood()
-	state.Score = score
+func (state *BoardState) ScoreState(move_req *MoveRequest, levels int) float64 {
+	log.Println(time.Now())
+	if len(state.Children) == 0 || levels == 0 {
+		score, _ := state.GetDistanceFromClosestFood()
+		state.Score = score
+		log.Println(time.Now())
+		return state.Score
+	} else {
+		var child_scores []float64
+		new_level := levels - 1
+		for _, child := range state.Children {
+			child_scores = append(child_scores, child.ScoreState(move_req, new_level))
+			var minimum_child_score float64
+			for _, child_score := range child_scores {
+				if child_score < minimum_child_score {
+					minimum_child_score = child_score
+				}
+			}
+		}
+		return state.Score
+	}
 }
