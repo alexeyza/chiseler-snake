@@ -71,11 +71,14 @@ func Strategize(world *MoveRequest) string {
 	}
 	// if still no path, take risky options
 	if path_map == nil {
+		max_space = 0
 		for i := 1; i < 5; i++ {
 			next_poistion := GetNextPointBasedOnDirection(i, my_head_location)
 			if IsValidPointToMoveTo(next_poistion, world) {
-				if floodfill(next_poistion, world) > max_space {
+				availible_space_in_current_direction := floodfill(next_poistion, world)
+				if availible_space_in_current_direction > max_space {
 					path_map = []int{i}
+					max_space = availible_space_in_current_direction
 				}
 			}
 		}
