@@ -5,11 +5,11 @@ import (
 	"fmt"
 	"gopkg.in/oleiade/lane.v1"
 	"log"
-	"net/http"
 	"math/rand"
+	"net/http"
 )
 
-var taunts = []string {
+var taunts = []string{
 	"Crush your enemies, see them driven before you, and hear the lamentations of their women!",
 	"You've just been ERASED!!",
 	"I'm the party pooper!",
@@ -47,7 +47,7 @@ func MoveHandler(response http.ResponseWriter, request *http.Request) {
 	response_data := BSResponse{
 		"move": Strategize(world),
 	}
-	if(world.Turn % 5 == 0) {
+	if world.Turn%5 == 0 {
 		CurrentTaunt = taunts[tauntNum]
 	}
 	response_data["taunt"] = CurrentTaunt
