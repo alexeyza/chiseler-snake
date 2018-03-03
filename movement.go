@@ -1,9 +1,9 @@
 package main
 
 import (
+	"errors"
 	"gopkg.in/oleiade/lane.v1"
 	"math"
-	"errors"
 )
 
 var movement_map = map[int]string{
@@ -44,7 +44,7 @@ func Strategize(world *MoveRequest) string {
 	var path_to_food []int = nil
 
 	//find paths to: food, tail, and path between the food and out tail
-	if(error == nil) {
+	if error == nil {
 		path_to_food := ShortestPath(my_head_location, food_location, world)
 		// first, check if we should aim for food
 		if ShouldSearchForFood(world) && path_to_food != nil {
@@ -91,6 +91,9 @@ func Strategize(world *MoveRequest) string {
 	}
 
 	for _, snake := range world.Snakes.Data {
+		if snake.Id == world.You.Id {
+			continue
+		}
 		path_to_kill_other_snake := ShortestPath(my_head_location, snake.Head(), world)
 		if path_to_kill_other_snake != nil {
 			return movement_map[path_to_kill_other_snake[0]]
