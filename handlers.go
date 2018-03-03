@@ -27,7 +27,7 @@ func StartHandler(response http.ResponseWriter, request *http.Request) {
 	start_request, _ := NewStartRequest(request)
 	active_games[start_request.Game_id] = lane.NewDeque()
 	response_data := BSResponse{
-		"name":            "Snekenegger",
+		"name":            "Snekkenegger",
 		"color":           "#AA0F01",
 		"taunt":           taunts[0],
 		"head_type":       "tongue",

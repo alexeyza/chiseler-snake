@@ -1,7 +1,7 @@
 package main
 
 import (
-	// "fmt"
+	"fmt"
 	"gopkg.in/oleiade/lane.v1"
 	"math"
 )
@@ -50,6 +50,7 @@ func Strategize(world *MoveRequest) string {
 
 	// if we don't need food or if the path to food is blocked, spin in place
 	if path_to_tail != nil {
+		fmt.Println(path_to_tail)
 		return movement_map[path_to_tail[0]]
 	}
 
@@ -96,6 +97,8 @@ func Strategize(world *MoveRequest) string {
 	if path_map == nil {
 		path_map = []int{1}
 	}
+
+	fmt.Println(path_map)
 	return movement_map[path_map[0]]
 }
 
@@ -311,6 +314,22 @@ func ShouldSearchForFood(world *MoveRequest) bool {
 	return world.You.Health < health_threshold+distance_to_food || world.You.Length < minimum_snake_size
 }
 
+// Checks if a given point is next to the enemy's head - used by floodfill to determine whether a snake might close off a space
+func isNextToEnemyHead(point Point, world *MoveRequest) bool {
+	for _, enemy_snake := range world.Snakes.Data {
+		// skip our snake
+		if enemy_snake.Id == world.You.Id {
+			continue
+		}
+		for _, nearHead := range GetAdjacentPoints(enemy_snake.Head()) {
+			if point.Equals(nearHead) {
+				return true
+			}
+		}
+	}
+	return false
+}
+
 // This method returns the number of accessible points from the given 'point'.
 func floodfill(point Point, world *MoveRequest) int {
 	game_grid := make([][]int, world.Width)
@@ -326,6 +345,9 @@ func floodfillhelper(point Point, world *MoveRequest, game_grid [][]int, num_of_
 		game_grid[point.X][point.Y] = 1
 		num_of_accessible_points++
 		for _, neighbor := range GetValidAdjacentPoints(point, world) {
+			if isNextToEnemyHead(neighbor, world) {
+				continue
+			}
 			num_of_accessible_points = floodfillhelper(neighbor, world, game_grid, num_of_accessible_points)
 		}
 	}
