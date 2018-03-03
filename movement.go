@@ -63,7 +63,7 @@ func Strategize(world *MoveRequest) string {
 		next_poistion := GetNextPointBasedOnDirection(i, my_head_location)
 		if IsValidPointToMoveTo(next_poistion, world) && !IsRiskyPoint(next_poistion, world) {
 			availible_space_in_current_direction := floodfill(next_poistion, world)
-			if availible_space_in_current_direction > max_space {
+			if availible_space_in_current_direction > max_space && availible_space_in_current_direction > world.You.Length+2 {
 				path_map = []int{i}
 				max_space = availible_space_in_current_direction
 			}
