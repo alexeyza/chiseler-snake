@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"strings"
-	"testing"
+  "testing"
 )
 
 func TestMoveHandler(t *testing.T) {
@@ -16,18 +16,18 @@ func TestMoveHandler(t *testing.T) {
 		success_returned_msg string // optional: use either success or fail return values
 		fail_returned_msg    string // optional
 	}{
-		{name: "(1) collide with larger snake", request_msg: test_collide_with_larger_snake, fail_returned_msg: "{\"move\":\"right\"}\n"},
-		{name: "(2) collide with same-size snake", request_msg: test_collide_with_same_size_snake, fail_returned_msg: "{\"move\":\"down\"}\n"},
-		{name: "(3) turn into dead end", request_msg: test_turn_into_dead_end, fail_returned_msg: "{\"move\":\"up\"}\n"},
-		{name: "(4) path to tail blocked, can't find a path", request_msg: test_cant_find_path_to_tail, fail_returned_msg: "{\"move\":\"up\"}\n"},
-		{name: "(5) path to tail blocked by another smaller snake", request_msg: test_no_path_to_tail, fail_returned_msg: "{\"move\":\"up\"}\n"},
-		{name: "(6) killed himself even though near food and smaller snake", request_msg: test_killed_himself_though_food_nearby_and_smaller_enemy_snake, fail_returned_msg: "{\"move\":\"up\"}\n"},
-		{name: "(7) kill himself when smaller snake blocked the way, even though could eat it", request_msg: test_smaller_snake_blocking_way, success_returned_msg: "{\"move\":\"down\"}\n"},
-		{name: "(8) didn't take possible risky but good move because near enemy snake head", request_msg: test_didnt_take_possible_risky_but_good_move, success_returned_msg: "{\"move\":\"left\"}\n"},
-		{name: "(9) closest food is blocked by body of our snake", request_msg: test_closest_food_is_blocked_by_our_snake, success_returned_msg: "{\"move\":\"right\"}\n"},
-		{name: "(10) 2 food places nearby, it choses the closer one but a dead end", request_msg: test_2_foods_nearby_it_choses_to_go_for_closer_one_but_deadend, success_returned_msg: "{\"move\":\"down\"}\n"},
-		{name: "(11) our snake doesn't take valid path that goes near enemy's head later on, instead taking dead end", request_msg: test_our_snake_wouldnt_take_valid_path_that_portion_of_it_goes_next_to_enemy_snake_head, success_returned_msg: "{\"move\":\"left\"}\n"},
-		{name: "(12) poor path selection, going for narrow path, which is later blocked by enemy", request_msg: test_poor_path_selection_choosing_to_go_for_narrow_path, success_returned_msg: "{\"move\":\"right\"}\n"},
+		{name: "(1) collide with larger snake", request_msg: test_collide_with_larger_snake, fail_returned_msg: "\"move\":\"right\""},
+		{name: "(2) collide with same-size snake", request_msg: test_collide_with_same_size_snake, fail_returned_msg: "\"move\":\"down\""},
+		{name: "(3) turn into dead end", request_msg: test_turn_into_dead_end, fail_returned_msg: "\"move\":\"up\""},
+		{name: "(4) path to tail blocked, can't find a path", request_msg: test_cant_find_path_to_tail, fail_returned_msg: "\"move\":\"up\""},
+		{name: "(5) path to tail blocked by another smaller snake", request_msg: test_no_path_to_tail, fail_returned_msg: "\"move\":\"up\"}\n"},
+		{name: "(6) killed himself even though near food and smaller snake", request_msg: test_killed_himself_though_food_nearby_and_smaller_enemy_snake, fail_returned_msg: "\"move\":\"up\""},
+		{name: "(7) kill himself when smaller snake blocked the way, even though could eat it", request_msg: test_smaller_snake_blocking_way, success_returned_msg: "\"move\":\"down\""},
+		{name: "(8) didn't take possible risky but good move because near enemy snake head", request_msg: test_didnt_take_possible_risky_but_good_move, success_returned_msg: "\"move\":\"left\""},
+		{name: "(9) closest food is blocked by body of our snake", request_msg: test_closest_food_is_blocked_by_our_snake, success_returned_msg: "\"move\":\"right\""},
+		{name: "(10) 2 food places nearby, it choses the closer one but a dead end", request_msg: test_2_foods_nearby_it_choses_to_go_for_closer_one_but_deadend, success_returned_msg: "\"move\":\"down\""},
+		{name: "(11) our snake doesn't take valid path that goes near enemy's head later on, instead taking dead end", request_msg: test_our_snake_wouldnt_take_valid_path_that_portion_of_it_goes_next_to_enemy_snake_head, success_returned_msg: "\"move\":\"left\""},
+		{name: "(12) poor path selection, going for narrow path, which is later blocked by enemy", request_msg: test_poor_path_selection_choosing_to_go_for_narrow_path, success_returned_msg: "\"move\":\"right\""},
 	}
 
 	for _, test_case := range test_cases {
@@ -60,16 +60,14 @@ func TestMoveHandler(t *testing.T) {
 		}
 
 		if test_case.fail_returned_msg != "" {
-			// checks if the returned value would lead us to death
-			if string(b) == test_case.fail_returned_msg {
-				t.Errorf(test_case.name)
-			}
+      if strings.Contains(string(b), test_case.fail_returned_msg) {
+        t.Errorf(test_case.name)
+      }
 		}
 		if test_case.success_returned_msg != "" {
-			// checks if the returned value would lead us to death
-			if string(b) != test_case.success_returned_msg {
-				t.Errorf(test_case.name)
-			}
+      if !strings.Contains(string(b), test_case.success_returned_msg) {
+        t.Errorf(test_case.name)
+      }
 		}
 	}
 }
