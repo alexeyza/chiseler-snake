@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"strings"
-  "testing"
+	"testing"
 )
 
 func TestMoveHandler(t *testing.T) {
@@ -60,14 +60,14 @@ func TestMoveHandler(t *testing.T) {
 		}
 
 		if test_case.fail_returned_msg != "" {
-      if strings.Contains(string(b), test_case.fail_returned_msg) {
-        t.Errorf(test_case.name)
-      }
+			if strings.Contains(string(b), test_case.fail_returned_msg) {
+				t.Errorf(test_case.name)
+			}
 		}
 		if test_case.success_returned_msg != "" {
-      if !strings.Contains(string(b), test_case.success_returned_msg) {
-        t.Errorf(test_case.name)
-      }
+			if !strings.Contains(string(b), test_case.success_returned_msg) {
+				t.Errorf(test_case.name)
+			}
 		}
 	}
 }

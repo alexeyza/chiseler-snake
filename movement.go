@@ -139,7 +139,7 @@ func IsRiskyPoint(p Point, world *MoveRequest) bool {
 		// next, check if we may hit an enemy snake's head,
 		// and if that snake's health is higher than ours, mark this as invalid move
 		for _, position_next_to_enemys_head := range GetAdjacentPoints(enemy_snake.Head()) {
-			if position_next_to_enemys_head.Equals(p) && enemy_snake.Length >= world.You.Length {
+			if position_next_to_enemys_head.Equals(p) { //&& enemy_snake.Length >= world.You.Length {
 				return true
 			}
 		}
@@ -236,7 +236,8 @@ func ShortestPath(source Point, destination Point, world *MoveRequest) []int {
 			next_position := GetNextPointBasedOnDirection(next_move, parent)
 
 			// if the neighbor is an invalid point (e.g., wall, other snake)
-			if !IsValidPointToMoveTo(next_position, world) { //|| IsRiskyPoint(next_position, world) {
+			if !IsValidPointToMoveTo(next_position, world) ||
+				(IsRiskyPoint(next_position, world) && !(next_position.Equals(destination) && IsPointHittingEnemySnakeHead(destination, world))) {
 				continue
 			}
 			// if already visited this neighbor, skip it
@@ -356,4 +357,16 @@ func GetPercentageOfAccessibleBoard(point Point, world *MoveRequest) float64 {
 	accessible_points := floodfill(point, world)
 	overall_board_points := world.Width * world.Height
 	return float64(accessible_points) / float64(overall_board_points)
+}
+
+func IsPointHittingEnemySnakeHead(point Point, world *MoveRequest) bool {
+	for _, enemy_snake := range world.Snakes.Data {
+		if enemy_snake.Id == world.You.Id {
+			continue
+		}
+		if point.Equals(enemy_snake.Head()) {
+			return true
+		}
+	}
+	return false
 }
