@@ -13,8 +13,8 @@ var movement_map = map[int]string{
 }
 
 // Adjust the health threshold and snake size that control when our snake needs to eat
-var health_threshold = 50
-var minimu_snake_size = 10
+var health_threshold = 30
+var minimum_snake_size = 8
 
 // This is the main movement method.
 // Returns a string indication the next movement direction.
@@ -38,17 +38,9 @@ func Strategize(world *MoveRequest) string {
 			break
 		}
 	}
-	// the following bit about path from food back to tail may not be ideal, and could be replaced later
-	var path_from_food_back_to_tail []int
-	for _, possible_target_destination := range near_tail_locations {
-		path_from_food_back_to_tail = ShortestPath(food_location, possible_target_destination, world)
-		if path_from_food_back_to_tail != nil {
-			break
-		}
-	}
 
 	// first, check if we should aim for food
-	if ShouldSearchForFood(world) && path_to_food != nil && path_from_food_back_to_tail != nil {
+	if ShouldSearchForFood(world) && path_to_food != nil {
 		return movement_map[path_to_food[0]]
 	}
 
@@ -58,23 +50,28 @@ func Strategize(world *MoveRequest) string {
 	}
 
 	// if path to tail was blocked, check if path to food is clear (even if not hungry)
-	if path_to_food != nil && path_from_food_back_to_tail != nil {
+	if path_to_food != nil {
 		return movement_map[path_to_food[0]]
 	}
 
 	// if haven't found a path to either food or tail, look for any valid and non risky direction
+	max_space := 0
 	for i := 1; i < 5; i++ {
-		if IsValidPointToMoveTo(GetNextPointBasedOnDirection(i, my_head_location), world) && !IsRiskyPoint(GetNextPointBasedOnDirection(i, my_head_location), world) {
-			path_map = []int{i}
-			break
+		next_poistion := GetNextPointBasedOnDirection(i, my_head_location)
+		if IsValidPointToMoveTo(next_poistion, world) && !IsRiskyPoint(next_poistion, world) {
+			if floodfill(next_poistion, world) > max_space {
+				path_map = []int{i}
+			}
 		}
 	}
 	// if still no path, take risky options
 	if path_map == nil {
 		for i := 1; i < 5; i++ {
-			if IsValidPointToMoveTo(GetNextPointBasedOnDirection(i, my_head_location), world) {
-				path_map = []int{i}
-				break
+			next_poistion := GetNextPointBasedOnDirection(i, my_head_location)
+			if IsValidPointToMoveTo(next_poistion, world) {
+				if floodfill(next_poistion, world) > max_space {
+					path_map = []int{i}
+				}
 			}
 		}
 	}
@@ -99,7 +96,11 @@ func IsGoingToHitHimselfAtPoint(p Point, snake Snake) bool {
 // This method checks if our snake may hit other snakes at the given point 'p'.
 func IsGoingToHitOthersAtPoint(p Point, world *MoveRequest) bool {
 	for _, enemy_snake := range world.Snakes.Data {
-		// first, check if we hit any of the enemy snake bodies
+		// ignore our snake
+		if enemy_snake.Id == world.You.Id {
+			continue
+		}
+		//check if we hit any of the enemy snake bodies
 		if IsGoingToHitHimselfAtPoint(p, enemy_snake) {
 			return true
 		}
@@ -163,14 +164,16 @@ func GetNextPointBasedOnDirection(direction int, currentPoint Point) Point {
 	return nextPoint
 }
 
-// This method returns a location of food.
-// If multiple foods exists, it will go for the closes one at the moment (but we may change this here).
+// This method returns a location of food that is close by and is not a dead end.
 func FindFood(location Point, world *MoveRequest) Point {
 	closest_distance := math.MaxFloat64
 	closest_food := world.Food.Data[0]
 	for _, food_source := range world.Food.Data {
+
 		dist := location.distance(food_source)
-		if dist < closest_distance {
+		availible_space := floodfill(food_source, world)
+
+		if dist < closest_distance && availible_space > world.You.Length*2 {
 			closest_distance = dist
 			closest_food = food_source
 		}
@@ -211,7 +214,7 @@ func ShortestPath(source Point, destination Point, world *MoveRequest) []int {
 			next_position := GetNextPointBasedOnDirection(next_move, parent)
 
 			// if the neighbor is an invalid point (e.g., wall, other snake)
-			if !IsValidPointToMoveTo(next_position, world) || (IsRiskyPoint(next_position, world) && len(map_of_paths_to_any_point[parent]) == 0) {
+			if !IsValidPointToMoveTo(next_position, world) || IsRiskyPoint(next_position, world) {
 				continue
 			}
 			// if already visited this neighbor, skip it
@@ -277,7 +280,35 @@ func ShouldSearchForFood(world *MoveRequest) bool {
 			return true
 		}
 	}
-
+	distance_to_food := len(ShortestPath(world.You.Head(), FindFood(world.You.Head(), world), world))
 	// check if our health below a threshold, or if we haven't reached minimum snake size
-	return world.You.Health < health_threshold+world.You.Length || world.You.Length < minimu_snake_size
+	return world.You.Health < health_threshold+distance_to_food || world.You.Length < minimum_snake_size
+}
+
+// This method returns the number of accessible points from the given 'point'.
+func floodfill(point Point, world *MoveRequest) int {
+	game_grid := make([][]int, world.Width)
+	for row := range game_grid {
+		game_grid[row] = make([]int, world.Height)
+	}
+	return floodfillhelper(point, world, game_grid, 0)
+}
+
+func floodfillhelper(point Point, world *MoveRequest, game_grid [][]int, num_of_accessible_points int) int {
+	if IsValidPointToMoveTo(point, world) && game_grid[point.X][point.Y] == 0 {
+		// mark as visited
+		game_grid[point.X][point.Y] = 1
+		num_of_accessible_points++
+		for _, neighbor := range GetValidAdjacentPoints(point, world) {
+			num_of_accessible_points = floodfillhelper(neighbor, world, game_grid, num_of_accessible_points)
+		}
+	}
+	return num_of_accessible_points
+}
+
+// This method returns the percentage of the board that is accessible from a given point. Use this to test for dead ends
+func GetPercentageOfAccessibleBoard(point Point, world *MoveRequest) float64 {
+	accessible_points := floodfill(point, world)
+	overall_board_points := world.Width * world.Height
+	return float64(accessible_points) / float64(overall_board_points)
 }
