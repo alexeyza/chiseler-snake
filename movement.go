@@ -3,6 +3,7 @@ package main
 import (
 	"gopkg.in/oleiade/lane.v1"
 	"math"
+	"errors"
 )
 
 var movement_map = map[int]string{
@@ -24,12 +25,9 @@ func Strategize(world *MoveRequest) string {
 	my_head_location := world.You.Head()
 	my_tail_location := GetTail(world.You)
 	near_tail_locations := GetValidAdjacentPoints(my_tail_location, world)
-	food_location := FindFood(my_head_location, world)
 
 	var path_map []int
 
-	//find paths to: food, tail, and path between the food and out tail
-	path_to_food := ShortestPath(my_head_location, food_location, world)
 	var path_to_tail []int
 	for _, possible_target_destination := range near_tail_locations {
 		path_to_tail = ShortestPath(my_head_location, possible_target_destination, world)
@@ -42,9 +40,16 @@ func Strategize(world *MoveRequest) string {
 		path_to_tail = ShortestPath(my_head_location, my_tail_location, world)
 	}
 
-	// first, check if we should aim for food
-	if ShouldSearchForFood(world) && path_to_food != nil {
-		return movement_map[path_to_food[0]]
+	food_location, error := FindFood(my_head_location, world)
+	var path_to_food []int = nil
+
+	//find paths to: food, tail, and path between the food and out tail
+	if(error == nil) {
+		path_to_food := ShortestPath(my_head_location, food_location, world)
+		// first, check if we should aim for food
+		if ShouldSearchForFood(world) && path_to_food != nil {
+			return movement_map[path_to_food[0]]
+		}
 	}
 
 	// if we don't need food or if the path to food is blocked, spin in place
@@ -185,8 +190,12 @@ func GetNextPointBasedOnDirection(direction int, currentPoint Point) Point {
 }
 
 // This method returns a location of food that is close by and is not a dead end.
-func FindFood(location Point, world *MoveRequest) Point {
+func FindFood(location Point, world *MoveRequest) (Point, error) {
 	closest_distance := math.MaxFloat64
+	if len(world.Food.Data) == 0 {
+		return world.You.Head(), errors.New("No food!")
+	}
+
 	closest_food := world.Food.Data[0]
 	max_space := 0
 	for _, food_source := range world.Food.Data {
@@ -200,7 +209,7 @@ func FindFood(location Point, world *MoveRequest) Point {
 			max_space = availible_space
 		}
 	}
-	return closest_food
+	return closest_food, nil
 }
 
 // This method returns a path towards the given destination (returns an array of directions).
@@ -307,7 +316,12 @@ func ShouldSearchForFood(world *MoveRequest) bool {
 			}
 		}
 	}
-	distance_to_food := len(ShortestPath(world.You.Head(), FindFood(world.You.Head(), world), world))
+
+	food, error := FindFood(world.You.Head(), world)
+	if error != nil {
+		return false
+	}
+	distance_to_food := len(ShortestPath(world.You.Head(), food, world))
 	// check if our health below a threshold, or if we haven't reached minimum snake size
 	return world.You.Health < health_threshold+distance_to_food || world.You.Length < minimum_snake_size
 }

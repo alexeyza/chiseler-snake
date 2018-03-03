@@ -13,7 +13,6 @@ var taunts = []string{
 	"Crush your enemies, see them driven before you, and hear the lamentations of their women!",
 	"You've just been ERASED!!",
 	"I'm the party pooper!",
-	"Allow me to break the ~ice~.",
 	"Who is your daddy, and what does he do??",
 	"Hasta la vista, baby!!",
 	"Talk to the hand.",
@@ -29,7 +28,7 @@ func StartHandler(response http.ResponseWriter, request *http.Request) {
 	response_data := BSResponse{
 		"name":            "Snekkenegger",
 		"color":           "#AA0F01",
-		"taunt":           taunts[0],
+		"taunt":           "Allow me to break the ~ice~.",
 		"head_type":       "tongue",
 		"tail_type":       "small-rattle",
 		"head_url":        "https://raw.githubusercontent.com/omazhary/chiseler-snake/personality/static/conanFace.png",
@@ -47,7 +46,7 @@ func MoveHandler(response http.ResponseWriter, request *http.Request) {
 	response_data := BSResponse{
 		"move": Strategize(world),
 	}
-	if world.Turn%5 == 0 {
+	if world.Turn%10 == 0 {
 		CurrentTaunt = taunts[tauntNum]
 	}
 	response_data["taunt"] = CurrentTaunt
