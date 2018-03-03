@@ -1,6 +1,7 @@
 package main
 
 import (
+	// "fmt"
 	"gopkg.in/oleiade/lane.v1"
 	"math"
 )
@@ -57,6 +58,13 @@ func Strategize(world *MoveRequest) string {
 		return movement_map[path_to_food[0]]
 	}
 
+	for _, snake := range world.Snakes.Data {
+		path_to_kill_other_snake := ShortestPath(my_head_location, snake.Head(), world)
+		if path_to_kill_other_snake != nil {
+			return movement_map[path_to_kill_other_snake[0]]
+		}
+	}
+
 	// if haven't found a path to either food or tail, look for any valid and non risky direction
 	max_space := 0
 	for i := 1; i < 5; i++ {
@@ -69,6 +77,7 @@ func Strategize(world *MoveRequest) string {
 			}
 		}
 	}
+
 	// if still no path, take risky options
 	if path_map == nil {
 		max_space = 0
@@ -83,7 +92,6 @@ func Strategize(world *MoveRequest) string {
 			}
 		}
 	}
-
 	// if no valid path found at all, return "up" as the next direction
 	if path_map == nil {
 		path_map = []int{1}
@@ -108,6 +116,9 @@ func IsGoingToHitOthersAtPoint(p Point, world *MoveRequest) bool {
 		// ignore our snake
 		if enemy_snake.Id == world.You.Id {
 			continue
+		}
+		if p.Equals(enemy_snake.Head()) && enemy_snake.Length < world.You.Length {
+			return false
 		}
 		//check if we hit any of the enemy snake bodies
 		if IsGoingToHitHimselfAtPoint(p, enemy_snake) {
