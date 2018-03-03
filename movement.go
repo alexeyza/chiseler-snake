@@ -49,7 +49,6 @@ func Strategize(world *MoveRequest) string {
 
 	// if we don't need food or if the path to food is blocked, spin in place
 	if path_to_tail != nil {
-		fmt.Println(path_to_tail)
 		return movement_map[path_to_tail[0]]
 	}
 
