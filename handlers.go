@@ -30,7 +30,7 @@ func StartHandler(response http.ResponseWriter, request *http.Request) {
 		"taunt":           taunts[0],
 		"head_type":       "tongue",
 		"tail_type":       "small-rattle",
-		"head_url":        "https://raw.githubusercontent.com/omazhary/chiseler-snake/master/static/conanFace.jpeg",
+		"head_url":        "https://raw.githubusercontent.com/omazhary/chiseler-snake/personality/static/conanFace.png",
 		"secondary_color": "#AA0F01",
 	}
 	json.NewEncoder(response).Encode(response_data)
