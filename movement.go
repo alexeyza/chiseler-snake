@@ -62,8 +62,10 @@ func Strategize(world *MoveRequest) string {
 	for i := 1; i < 5; i++ {
 		next_poistion := GetNextPointBasedOnDirection(i, my_head_location)
 		if IsValidPointToMoveTo(next_poistion, world) && !IsRiskyPoint(next_poistion, world) {
-			if floodfill(next_poistion, world) > max_space {
+			availible_space_in_current_direction := floodfill(next_poistion, world)
+			if availible_space_in_current_direction > max_space {
 				path_map = []int{i}
+				max_space = availible_space_in_current_direction
 			}
 		}
 	}
@@ -172,14 +174,16 @@ func GetNextPointBasedOnDirection(direction int, currentPoint Point) Point {
 func FindFood(location Point, world *MoveRequest) Point {
 	closest_distance := math.MaxFloat64
 	closest_food := world.Food.Data[0]
+	max_space := 0
 	for _, food_source := range world.Food.Data {
 
 		dist := location.distance(food_source)
 		availible_space := floodfill(food_source, world)
 
-		if dist <= closest_distance && availible_space > world.You.Length+2 {
+		if (dist <= closest_distance && availible_space > world.You.Length+2) || availible_space > max_space {
 			closest_distance = dist
 			closest_food = food_source
+			max_space = availible_space
 		}
 	}
 	return closest_food
