@@ -219,6 +219,11 @@ func FindFood(location Point, world *MoveRequest) (Point, error) {
 // If a path to the given destination was not found, returns nil
 // This is a standard iterative BFS algorithm
 func ShortestPath(source Point, destination Point, world *MoveRequest) []int {
+	no_tunnels_path := ShortestPathNoTunnels(source, destination, world)
+	if no_tunnels_path != nil {
+		return no_tunnels_path
+	}
+
 	queue := lane.NewDeque()
 	var parent Point
 	visited := map[Point]bool{}
@@ -256,6 +261,7 @@ func ShortestPath(source Point, destination Point, world *MoveRequest) []int {
 			if visited[next_position] {
 				continue
 			}
+
 			// If haven't seen this neighbor before, add it to "plan to visit"
 			// and document the direction we'd need to take to reach it,
 			// appending it to the directions we've already taken
@@ -386,4 +392,77 @@ func IsPointHittingEnemySnakeHead(point Point, world *MoveRequest) bool {
 		}
 	}
 	return false
+}
+
+// func DoesPathGoThroughTunnel(path []int, world *MoveRequest) bool{
+// 	prev_point:=world.You.Head()
+// 	for _, direction:= range of path{
+// 		next_point:=GetNextPointBasedOnDirection(direction, prev_point)
+// 		if len(GetValidAdjacentPoints(next_point, world))<3{
+// 			return true
+// 		}
+// 		prev_point = next_point
+// 	}
+// 	return false
+// }
+
+// This method returns a path towards the given destination (returns an array of directions).
+// If a path to the given destination was not found, returns nil
+// This is a standard iterative BFS algorithm
+func ShortestPathNoTunnels(source Point, destination Point, world *MoveRequest) []int {
+	queue := lane.NewDeque()
+	var parent Point
+	visited := map[Point]bool{}
+	plan_to_visit := map[Point]bool{}
+	possible_directions := []int{1, 2, 3, 4}
+	map_of_paths_to_any_point := map[Point][]int{}
+
+	// start BFS by queuing the source point
+	queue.Prepend(source)
+
+	// while there are neighboring/adjacent points we haven't visited yet
+	for !queue.Empty() {
+		// pop the current element, and mark it as "not plan to visit through other nodes"
+		parent, _ = queue.Pop().(Point)
+		plan_to_visit[parent] = false
+
+		// if we reached destination, stop
+		if parent.Equals(destination) {
+			// return the list of directions from source to destination
+			// note: we actually have a list of directions from the source to any other point on the board
+			return map_of_paths_to_any_point[destination]
+		}
+
+		// for every neighboring/adjacent point to the current point
+		// it iterates over the four directions: up, down, left, right
+		for _, next_move := range possible_directions {
+			next_position := GetNextPointBasedOnDirection(next_move, parent)
+
+			// if the neighbor is an invalid point (e.g., wall, other snake)
+			if !IsValidPointToMoveTo(next_position, world) ||
+				(IsRiskyPoint(next_position, world) && !(next_position.Equals(destination) && IsPointHittingEnemySnakeHead(destination, world))) {
+				continue
+			}
+			// if already visited this neighbor, skip it
+			if visited[next_position] {
+				continue
+			}
+			if len(GetValidAdjacentPoints(next_position, world)) < 3 {
+				continue
+			}
+
+			// If haven't seen this neighbor before, add it to "plan to visit"
+			// and document the direction we'd need to take to reach it,
+			// appending it to the directions we've already taken
+			if !plan_to_visit[next_position] {
+				queue.Prepend(next_position)
+				plan_to_visit[next_position] = true
+				map_of_paths_to_any_point[next_position] = append(map_of_paths_to_any_point[parent], next_move)
+			}
+		}
+		// mark the current point as visited
+		visited[parent] = true
+	}
+
+	return nil
 }
