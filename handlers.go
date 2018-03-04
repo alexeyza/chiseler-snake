@@ -9,18 +9,34 @@ import (
 	"net/http"
 )
 
-var taunts = []string{
-	"Crush your enemies, see them driven before you, and hear the lamentations of their women!",
-	"You've just been ERASED!!",
-	"I'm the party pooper!",
-	"Who is your daddy, and what does he do??",
-	"Hasta la vista, baby!!",
-	"Talk to the hand.",
-	"If it bleeds, we can kill it!",
-	"I'll be back!",
-}
-
 var CurrentTaunt string
+
+func getTaunt(world *MoveRequest) string {
+	snakeData := world.Snakes.Data
+	tauntNumber := rand.Intn(8)
+
+	enemySnake := snakeData[tauntNumber % len(snakeData)]
+
+	if(enemySnake.Id == world.You.Id) {
+		tauntNumber += 1
+		enemySnake = snakeData[tauntNumber % len(snakeData)]
+	}
+
+	enemySnakeName := enemySnake.Name
+
+	var taunts = []string {
+		"Crush your enemies, see them driven before you... etc",
+		enemySnakeName + ", you've just been ERASED!!",
+		"I'm the party pooper!",
+		enemySnakeName + " - who is your daddy, and what does he do??",
+		"Hasta la vista, baby!!",
+		"Talk to the hand, " + enemySnakeName,
+		"If " + enemySnakeName + " bleeds, we can kill it!",
+		"I'll be back!",
+	}
+
+	return taunts[tauntNumber]
+}
 
 func StartHandler(response http.ResponseWriter, request *http.Request) {
 	start_request, _ := NewStartRequest(request)
@@ -42,12 +58,11 @@ func StartHandler(response http.ResponseWriter, request *http.Request) {
 func MoveHandler(response http.ResponseWriter, request *http.Request) {
 	log.Println("Received move request.")
 	world, _ := NewMoveRequest(request)
-	tauntNum := rand.Intn(len(taunts))
 	response_data := BSResponse{
 		"move": Strategize(world),
 	}
-	if world.Turn%10 == 0 {
-		CurrentTaunt = taunts[tauntNum]
+	if world.Turn % 10 == 0 {
+		CurrentTaunt = getTaunt(world)
 	}
 	response_data["taunt"] = CurrentTaunt
 	json.NewEncoder(response).Encode(response_data)
